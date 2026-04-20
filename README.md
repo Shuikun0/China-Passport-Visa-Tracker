@@ -1,26 +1,35 @@
-# China Passport Visa Tracker
+# 中国护照签证便利度追踪
 
-A lightweight single-page tool to visualize visa access for Chinese passport holders.
+一个干净、纯前端、无后端的签证可视化小工具。  
+给中国护照出行做快速判断：一眼看懂，少查半天。
 
-## What it does
+## 这个工具解决什么
 
-- World map colored by visa type or visa ease level
-- Search/filter/sort country list
-- Click list row to open detailed panel
-- Day/Night mode
+- 哪些国家免签 / 落地签？
+- 哪些是电子签，哪些是常规签？
+- 哪些国家“办签证相对容易”？
 
-## Run
+## 功能
 
-Open `index.html` directly in your browser.  
-No build step, no backend.
+- 世界地图交互展示（签证方式 / 签证容易度双模式）
+- 国家列表搜索、筛选、排序
+- 详情面板（备注 + 实用链接）
+- 简约日间 / 夜间主题
 
-## Data maintenance
+## 使用方式
 
-Edit data in `index.html`:
+直接用浏览器打开 `index.html` 即可。
 
-- `STATIC_VISA_DATA`: core visa records
-- `POPULAR_VISA_LINKS_BY_ISO3`: popular-country visa application links
+不需要构建，不需要服务端，不折腾。
 
-## Notes
+## 数据维护
 
-Data may be outdated or inaccurate. Always verify with official immigration/embassy sources before travel.
+在 `index.html` 里直接维护：
+
+- `STATIC_VISA_DATA`
+- `POPULAR_VISA_LINKS_BY_ISO3`
+
+## 提醒
+
+签证政策变化很快。  
+本项目适合作为“快速参考层”，实际出行请以官方渠道为准。
