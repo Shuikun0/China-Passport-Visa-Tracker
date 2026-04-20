@@ -1,81 +1,26 @@
-# 中国护照签证便利度追踪
+# China Passport Visa Tracker
 
-一个单文件静态网页工具，用于可视化展示 **中国护照** 前往全球国家/地区的签证情况（免签 / 落地签 / 电子签 / 常规签），支持地图交互、列表检索、主题切换和详情面板。
+A lightweight single-page tool to visualize visa access for Chinese passport holders.
 
-> 页面为静态数据清单模式，便于离线浏览与手动维护。
+## What it does
 
-## 功能特性
+- World map colored by visa type or visa ease level
+- Search/filter/sort country list
+- Click list row to open detailed panel
+- Day/Night mode
 
-- 🌍 **世界地图可视化**
-  - 按签证方式着色（免签 / 落地签 / 电子签 / 常规签）
-  - 可切换为按签证容易度分档着色（1-5 档）
-  - 支持平移、缩放、悬停查看详情
+## Run
 
-- 📋 **国家列表**
-  - 支持按国家名搜索
-  - 支持按分类筛选（点击统计卡片多选）
-  - 支持按“国家/地区”或“分类”排序
-  - 列表行点击可打开左侧详情面板
+Open `index.html` directly in your browser.  
+No build step, no backend.
 
-- 🧾 **详情面板**
-  - 展示国家、签证类型、签证要求、停留、备注、签证容易度
-  - 支持展示签证申请链接（若有）
-  - 自动提供 Google 地图位置链接
+## Data maintenance
 
-- 🎨 **体验**
-  - 日间 / 夜间模式切换
-  - 自定义浮窗样式
-  - 细节交互优化（小国点位、悬停高亮、边界与性能优化等）
+Edit data in `index.html`:
 
-## 技术栈
+- `STATIC_VISA_DATA`: core visa records
+- `POPULAR_VISA_LINKS_BY_ISO3`: popular-country visa application links
 
-- HTML + CSS + Vanilla JavaScript（单文件实现）
-- [Plotly.js](https://plotly.com/javascript/)（地图与地理图层交互）
+## Notes
 
-## 项目结构
-
-```text
-.
-└── index.html   # 全部页面结构、样式、数据、交互逻辑
-```
-
-## 快速开始
-
-1. 克隆仓库
-2. 直接用浏览器打开 `index.html`
-
-无需构建、无需后端服务。
-
-## 数据维护指南
-
-本项目主要通过 `index.html` 内两个数据块维护：
-
-- `STATIC_VISA_DATA`
-  - 主数据源：国家、签证类型、签证要求、停留、备注、iso3 等
-- `POPULAR_VISA_LINKS_BY_ISO3`
-  - 热门国家签证申请链接映射（优先于文本提取）
-
-### 更新建议
-
-- 修改国家签证状态时，优先更新 `STATIC_VISA_DATA`
-- 若某国有明确官方申请入口，可补充到 `POPULAR_VISA_LINKS_BY_ISO3`
-- 提交前建议手动抽查：
-  - 地图着色是否正确
-  - 列表筛选/排序是否正常
-  - 详情面板链接是否可打开
-
-## 说明与免责声明
-
-- 本工具为信息整理与可视化展示，不构成出行法律建议。
-- 签证政策变化频繁，实际出行请以官方移民局、使领馆、航空公司政策为准。
-
-## Roadmap（可选）
-
-- [ ] 增加“最后更新记录”与变更日志区域
-- [ ] 增加导入/导出 JSON 的维护功能
-- [ ] 增加多语言切换（中/英）
-- [ ] 增加热门国家快捷筛选
-
----
-
-如果这个项目对你有帮助，欢迎 Star ⭐
+Data may be outdated or inaccurate. Always verify with official immigration/embassy sources before travel.
