@@ -1,0 +1,4597 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中国护照签证状态展示（静态清单）</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y="52" font-size="52">🗺️</text></svg>' />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #2563eb;
+      --ok: #16a34a;
+      --input-bg: #ffffff;
+      --tooltip-bg: #ffffff;
+      --tooltip-border: #cbd5e1;
+      --tooltip-text: #0f172a;
+      --stat-bg: #ffffff;
+      --stat-border: #e5e7eb;
+      --map-land: #d1d5db;
+      --map-coast: #d1d5db;
+      --map-country: #a8b3c2;
+      --map-ocean: #e6f2ff;
+      --map-lake: #cfe8ff;
+      --map-bg: #ffffff;
+    }
+    body.dark {
+      --bg: #0b1220;
+      --card: #0f172a;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --line: #1f2937;
+      --primary: #3b82f6;
+      --ok: #22c55e;
+      --input-bg: #111827;
+      --tooltip-bg: #0f172a;
+      --tooltip-border: #334155;
+      --tooltip-text: #e5e7eb;
+      --stat-bg: #111827;
+      --stat-border: #1f2937;
+      --map-land: #334155;
+      --map-coast: #475569;
+      --map-country: #64748b;
+      --map-ocean: #0b2447;
+      --map-lake: #12325f;
+      --map-bg: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      overscroll-behavior-x: none;
+      overscroll-behavior-y: none;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(100, 116, 139, 0.45) transparent;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.45);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+    html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.62);
+      background-clip: content-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+    .wrap { max-width: 1120px; margin: 24px auto; padding: 0 16px 28px; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .hint { margin: 0 0 16px; color: var(--muted); font-size: 12px; line-height: 1.45; opacity: 0.72; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .toolbar {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text);
+    }
+    button {
+      cursor: pointer;
+      border-color: transparent;
+      background: var(--primary);
+      color: #fff;
+      width: auto;
+      padding: 10px 14px;
+    }
+    .stats {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .map-wrap {
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .map-box {
+      position: relative;
+    }
+    .map-tooltip {
+      position: absolute;
+      z-index: 20;
+      min-width: 230px;
+      max-width: 320px;
+      background: var(--tooltip-bg);
+      border: 1px solid var(--tooltip-border);
+      border-radius: 10px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+      padding: 10px 12px;
+      pointer-events: none;
+      display: none;
+      font-size: 12px;
+      color: var(--tooltip-text);
+      line-height: 1.45;
+    }
+    .table-tooltip {
+      position: fixed;
+      z-index: 30;
+      display: none;
+    }
+    .country-panel {
+      position: fixed;
+      left: 16px;
+      top: 84px;
+      width: min(360px, calc(100vw - 24px));
+      max-height: calc(100vh - 108px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 16px 40px rgba(2, 6, 23, 0.18);
+      overflow: hidden;
+      z-index: 45;
+      transform: translateX(-112%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .22s ease, opacity .2s ease;
+    }
+    .country-panel.is-open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .country-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .country-panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .country-panel-close {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+      font-size: 16px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .country-panel-body {
+      padding: 12px;
+      overflow: auto;
+      max-height: calc(100vh - 172px);
+    }
+    .panel-links {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      display: grid;
+      gap: 8px;
+    }
+    .panel-link-row {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .panel-link-row a {
+      color: var(--primary);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .panel-link-row a:hover { text-decoration: underline; }
+    .map-tooltip-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .map-tooltip-chip {
+      display: inline-flex;
+      vertical-align: middle;
+      margin-left: 6px;
+      padding: 1px 8px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      color: #374151;
+    }
+    .chip-free { border-color: #93c5fd; background: #eff6ff; color: #1e3a8a; }
+    .chip-arrival { border-color: #86efac; background: #f0fdf4; color: #166534; }
+    .chip-evisa { border-color: #fde047; background: #fefce8; color: #854d0e; }
+    .chip-regular { border-color: #d1d5db; background: #f9fafb; color: #374151; }
+    .diff-meter {
+      display: inline-flex;
+      gap: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .diff-mark {
+      font-weight: 700;
+      opacity: 0.28;
+      color: #94a3b8;
+      line-height: 1;
+    }
+    .diff-mark.on-1 { color: #3b82f6; opacity: 1; }
+    .diff-mark.on-2 { color: #22c55e; opacity: 1; }
+    .diff-mark.on-3 { color: #eab308; opacity: 1; }
+    .diff-mark.on-4 { color: #fb8c00; opacity: 1; }
+    .diff-mark.on-5 { color: #8e24aa; opacity: 1; }
+    .ease-text {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .ease-1 { color: #3b82f6; }
+    .ease-2 { color: #22c55e; }
+    .ease-3 { color: #eab308; }
+    .ease-4 { color: #fb8c00; }
+    .ease-5 { color: #8e24aa; }
+    .map-tooltip-label {
+      color: #64748b;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+    .map-tooltip-value {
+      margin-top: 1px;
+      font-size: 11px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .theme-toggle:hover {
+      border-color: var(--line);
+    }
+    .map-legend {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .map-bottom {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .map-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .mode-toggle-btn {
+      border: 1px solid var(--line);
+      background: var(--input-bg);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+    .map-legend-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    .stat {
+      flex: 1 1 0;
+      min-width: 120px;
+      border: 1px solid var(--stat-border);
+      border-radius: 10px;
+      padding: 10px;
+      background: var(--stat-bg);
+      cursor: pointer;
+      transition: border-color .18s ease, box-shadow .18s ease, transform .12s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat:hover {
+      border-color: var(--primary);
+    }
+    .stat:active {
+      transform: translateY(1px);
+    }
+    .stat.is-selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18) inset;
+    }
+    .stat-bg-flags {
+      position: absolute;
+      left: -16%;
+      top: -28%;
+      width: 132%;
+      height: 160%;
+      pointer-events: none;
+      user-select: none;
+      font-size: 15px;
+      line-height: 1.45;
+      letter-spacing: 1px;
+      white-space: normal;
+      overflow: hidden;
+      opacity: 0.07;
+      filter: saturate(0.85);
+      transform: rotate(-14deg);
+      transform-origin: center center;
+      z-index: 0;
+    }
+    .stat-label, .stat-value { position: relative; z-index: 1; }
+    .stat-label { color: var(--muted); font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .stat-value { font-size: 22px; font-weight: 700; }
+    .table-wrap { overflow: auto; }
+    .list-search {
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 100%;
+      table-layout: fixed;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      font-size: 14px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 13px; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.col-country, td.col-country { width: 220px; }
+    th.col-type, td.col-type { width: 110px; }
+    .ellipsis {
+      display: block;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tag {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .tag-free { background: #eff6ff; color: #1e3a8a; }
+    .tag-arrival { background: #f0fdf4; color: #166534; }
+    .tag-evisa { background: #fefce8; color: #854d0e; }
+    .tag-regular { background: #f3f4f6; color: #374151; }
+    .meta {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .ok { color: var(--ok); }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    @media (max-width: 900px) {
+      .toolbar { grid-template-columns: 1fr; }
+      .stats { flex-wrap: wrap; }
+      .stat { min-width: calc(50% - 8px); }
+    }
+    @media (max-width: 860px) {
+      .country-panel {
+        left: 10px;
+        top: auto;
+        bottom: 10px;
+        width: calc(100vw - 20px);
+        max-height: 56vh;
+      }
+      .country-panel-body { max-height: calc(56vh - 58px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <h1>🌏 中国护照签证便利度追踪</h1>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换夜间模式" title="切换日间/夜间">☀</button>
+    </div>
+    <p class="hint">
+      本页面部分数据由非常牛逼的 AI 基于网络公开信息抓取整理，可能存在不准确或滞后；建议您双重核实实际情况。最后更新于 2026-04-20。
+    </p>
+
+    <div class="card">
+      <div class="map-box">
+        <div id="worldMap" class="map-wrap"></div>
+        <div id="mapTooltip" class="map-tooltip"></div>
+      </div>
+      <div class="map-bottom">
+        <div class="map-controls">
+          <button id="difficultyModeToggle" class="mode-toggle-btn" type="button" aria-label="切换地图着色模式">按签证容易度着色</button>
+        </div>
+        <div id="legendType" class="map-legend-group">
+          <span class="legend-item"><span class="legend-swatch" style="background:#3b82f6;"></span>免签</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#22c55e;"></span>落地签</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#facc15;"></span>电子签</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#6b7280;"></span>常规签</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#d1d5db;"></span>无信息</span>
+        </div>
+        <div id="legendDifficulty" class="map-legend-group" style="display:none;">
+          <span class="legend-item"><span class="legend-swatch" style="background:#3b82f6;"></span>非常简易</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#22c55e;"></span>较为简易</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#eab308;"></span>常规</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#fb8c00;"></span>较困难</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#8e24aa;"></span>非常困难</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#d1d5db;"></span>无信息</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stats">
+        <div id="statFree" class="stat"><div id="flagsFree" class="stat-bg-flags" aria-hidden="true"></div><div class="stat-label">免签</div><div id="countFree" class="stat-value">0</div></div>
+        <div id="statArrival" class="stat"><div id="flagsArrival" class="stat-bg-flags" aria-hidden="true"></div><div class="stat-label">落地签</div><div id="countArrival" class="stat-value">0</div></div>
+        <div id="statEvisa" class="stat"><div id="flagsEvisa" class="stat-bg-flags" aria-hidden="true"></div><div class="stat-label">电子签</div><div id="countEvisa" class="stat-value">0</div></div>
+        <div id="statRegular" class="stat"><div id="flagsRegular" class="stat-bg-flags" aria-hidden="true"></div><div class="stat-label">常规签</div><div id="countRegular" class="stat-value">0</div></div>
+      </div>
+      <div class="meta">
+        <span id="totalText">共 0 条</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="list-search">
+        <input id="searchInput" type="text" placeholder="搜索国家..." />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th id="sortCountry" class="col-country">国家/地区</th>
+              <th id="sortType" class="col-type">分类</th>
+              <th>备注</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div id="tableTooltip" class="map-tooltip table-tooltip"></div>
+  <aside id="countryPanel" class="country-panel" aria-hidden="true">
+    <div class="country-panel-head">
+      <span class="country-panel-title">国家详情</span>
+      <button id="countryPanelClose" class="country-panel-close" type="button" aria-label="关闭国家详情">×</button>
+    </div>
+    <div id="countryPanelBody" class="country-panel-body"></div>
+  </aside>
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script>
+    // 手动维护区：在这里增删改国家清单即可
+    // type 只支持：免签 / 落地签 / 电子签 / 常规签
+    const STATIC_VISA_DATA = [
+    {
+        "country": "不丹",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Bhutan",
+        "iso3": "BTN"
+    },
+    {
+        "country": "东帝汶",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "30天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Timor-Leste",
+        "iso3": "TLS"
+    },
+    {
+        "country": "中非共和国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Central African Republic",
+        "iso3": "CAF"
+    },
+    {
+        "country": "丹麦",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Denmark",
+        "iso3": "DNK"
+    },
+    {
+        "country": "乌克兰",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "乌克兰于 2025 年 2 月恢复电子签证服务。",
+        "country_en": "Ukraine",
+        "iso3": "UKR"
+    },
+    {
+        "country": "乌兹别克斯坦",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "停留期限每次为30天，任意180天内不得超过90天。",
+        "country_en": "Uzbekistan",
+        "iso3": "UZB"
+    },
+    {
+        "country": "乌干达",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "3个月",
+        "note": "也可以持肯尼亚或卢旺达签发的东非旅游签证入境。",
+        "country_en": "Uganda",
+        "iso3": "UGA"
+    },
+    {
+        "country": "乌拉圭",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "National visa may be substituted with a valid visa issued by the United States, Canada or a European Union member state for stays up to 90 days when arriving via Montevideo airport or Montevideo and Colonia ports.美国绿卡持有者需要申请签证。向您最近的领事馆发送电子邮件进行确认。自2018年7月14日起，签发的商务​​签证有效期为10年。持有因公护照的人不需要签证。",
+        "country_en": "Uruguay",
+        "iso3": "URY"
+    },
+    {
+        "country": "乍得",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Chad",
+        "iso3": "TCD"
+    },
+    {
+        "country": "也门",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Yemen",
+        "iso3": "YEM"
+    },
+    {
+        "country": "亚美尼亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "任意 180 天内的 90 天。持有因公护照的人在最长 30 天的时间内不需要签证。",
+        "country_en": "Armenia",
+        "iso3": "ARM"
+    },
+    {
+        "country": "以色列",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "截至2017年，签证有效期为10年。",
+        "country_en": "Israel",
+        "iso3": "ISR"
+    },
+    {
+        "country": "伊拉克",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "自 2025 年 3 月 1 日起，建议使用落地签证设施的国家/地区的公民在通过链接前往伊拉克之前申请电子签证。",
+        "country_en": "Iraq",
+        "iso3": "IRQ"
+    },
+    {
+        "country": "伊朗",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "21天",
+        "note": "",
+        "country_en": "Iran, Islamic Republic of",
+        "iso3": "IRN"
+    },
+    {
+        "country": "伯利兹",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "游轮乘客不需要签证。持有加拿大或美国签发的多次入境签证或永久居民卡，可免签证入境最长 30 天。持有申根国家签发的多次入境签证的人可免签证入境长达 30 天。",
+        "country_en": "Belize",
+        "iso3": "BLZ"
+    },
+    {
+        "country": "佛得角",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival[6]",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Cabo Verde",
+        "iso3": "CPV"
+    },
+    {
+        "country": "俄罗斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "2026 年 9 月 14 日之前免签证。5 至 50 名游客的团体无需签证即可通过预先批准的旅行社进入俄罗斯，停留最多 15 天。",
+        "country_en": "Russian Federation",
+        "iso3": "RUS"
+    },
+    {
+        "country": "保加利亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Bulgaria",
+        "iso3": "BGR"
+    },
+    {
+        "country": "克罗地亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Croatia",
+        "iso3": "HRV"
+    },
+    {
+        "country": "冈比亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Gambia",
+        "iso3": "GMB"
+    },
+    {
+        "country": "冰岛",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Iceland",
+        "iso3": "ISL"
+    },
+    {
+        "country": "几内亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "90天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Guinea",
+        "iso3": "GIN"
+    },
+    {
+        "country": "几内亚比绍",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Guinea-Bissau",
+        "iso3": "GNB"
+    },
+    {
+        "country": "列支敦士登",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Liechtenstein",
+        "iso3": "LIE"
+    },
+    {
+        "country": "刚果（布）",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Congo",
+        "iso3": "COG"
+    },
+    {
+        "country": "刚果（金）",
+        "type": "电子签",
+        "rawRequirement": "eVisa[6][43]",
+        "stay": "7天",
+        "note": "",
+        "country_en": "Congo, The Democratic Republic of the",
+        "iso3": "COD"
+    },
+    {
+        "country": "利比亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Libya",
+        "iso3": "LBY"
+    },
+    {
+        "country": "利比里亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Liberia",
+        "iso3": "LBR"
+    },
+    {
+        "country": "加拿大",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有有效美国签证并乘坐加拿大航空（包括子公司加航 Rouge 和爵士航空）、中国国际航空、国泰航空、中华航空、中国东方航空、中国南方航空、海南航空运营的航班，并在抵达后 24 小时内经卡尔加里、蒙特利尔特鲁多机场（仅限加拿大航空航班）、多伦多皮尔逊机场（仅限 1 号航站楼，不可变更航站楼或在 3 号航站楼转机）、温哥华国际机场或温尼伯机场往返美国，无需过境签证。菲律宾航空、西捷航空或厦门航空。如果前往美国，需要从北京、成都、福州、广州、哈尔滨、香港、马尼拉、名古屋、大阪、首尔、上海、沉阳、台北、东京或厦门出发。如果离开美国，则无需受到驱逐令或驱逐令，也无需在美国停留超过授权时间。美国永久居民不需要签证。",
+        "country_en": "Canada",
+        "iso3": "CAN"
+    },
+    {
+        "country": "加纳",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Ghana",
+        "iso3": "GHA"
+    },
+    {
+        "country": "加蓬",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "90天",
+        "note": "电子签证持有者必须通过利伯维尔国际机场抵达。持有因公护照的人不需要签证。",
+        "country_en": "Gabon",
+        "iso3": "GAB"
+    },
+    {
+        "country": "匈牙利",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Hungary",
+        "iso3": "HUN"
+    },
+    {
+        "country": "朝鲜",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "中国游客可免签证前往东林郡旅游2天。他们还可以在没有签证的情况下前往新义州进行一日游。持有因公护照的人不需要签证。",
+        "country_en": "Korea, Democratic People's Republic of",
+        "iso3": "PRK"
+    },
+    {
+        "country": "北马其顿",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "如果签证的有效期比在北马其顿的预定停留期限至少长 5 天，则国家签证可以用申根区成员国、美国、加拿大或英国签发的停留期最长为 15 天的有效签证代替。 *Holders of passports for public affairs do not require a visa.如果护照上注明“出于公共事务”，则可免签证。",
+        "country_en": "North Macedonia",
+        "iso3": "MKD"
+    },
+    {
+        "country": "南苏丹",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "可在线获取。旅行时必须出示打印的签证授权书。持有因公护照的人不需要签证。",
+        "country_en": "South Sudan",
+        "iso3": "SSD"
+    },
+    {
+        "country": "南非",
+        "type": "电子签",
+        "rawRequirement": "Electronic Travel Authorization / eVisa",
+        "stay": "90天",
+        "note": "凭借预计到达时间，中国护照持有者可经奥利弗·雷金纳德·坦博国际机场或开普敦机场入境，停留时间最长为 90 天。 ETA 有效期为 1 年，可多次入境，每次停留最多 90 天。 ETA issuance is usually within an hour. In addition to ETA, e-Visa is also available.",
+        "country_en": "South Africa",
+        "iso3": "ZAF"
+    },
+    {
+        "country": "博茨瓦纳",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "3个月",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Botswana",
+        "iso3": "BWA"
+    },
+    {
+        "country": "卡塔尔",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Qatar",
+        "iso3": "QAT"
+    },
+    {
+        "country": "卢旺达",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Rwanda",
+        "iso3": "RWA"
+    },
+    {
+        "country": "卢森堡",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Luxembourg",
+        "iso3": "LUX"
+    },
+    {
+        "country": "印度",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "由于中国和印度之间的军事紧张局势，电子签证不再可用。",
+        "country_en": "India",
+        "iso3": "IND"
+    },
+    {
+        "country": "印度尼西亚",
+        "type": "落地签",
+        "rawRequirement": "e-VOA / Visa on arrival",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Indonesia",
+        "iso3": "IDN"
+    },
+    {
+        "country": "危地马拉",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "根据《中美洲-4 边境管制协议》，持有萨尔瓦多、洪都拉斯或尼加拉瓜签证或居留许可的旅客无需签证即可进入危地马拉。自2019年起，任何欧盟成员国、安道尔、安提瓜和巴布达、阿根廷、澳大利亚、巴哈马、巴林、巴巴多斯、伯利兹、巴西、文莱、加拿大、智利、哥伦比亚、哥斯达黎加、斐济、洪都拉斯、冰岛、以色列、日本、科威特、列支敦士登、马达加斯加、马来西亚、马绍尔群岛、墨西哥、摩纳哥、新西兰、北马其顿、挪威、巴拿马、巴拉圭、秘鲁、卡塔尔、俄罗斯、圣基茨和尼维斯、圣卢西亚、圣文森特和格林纳丁斯、圣马力诺、圣多美和普林西比、沙特阿拉伯、新加坡、所罗门群岛、南非、韩国、瑞士、中国台湾、特立尼达和多巴哥、土耳其、图瓦卢、乌克兰、阿拉伯联合酋长国、英国、美国、乌拉圭、瓦努阿图和梵蒂冈城，无论国籍如何，都可以免签证进入危地马拉。",
+        "country_en": "Guatemala",
+        "iso3": "GTM"
+    },
+    {
+        "country": "厄瓜多尔",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "自2024年7月1日起，厄瓜多尔恢复对中国公民的签证要求。",
+        "country_en": "Ecuador",
+        "iso3": "ECU"
+    },
+    {
+        "country": "厄立特里亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Eritrea",
+        "iso3": "ERI"
+    },
+    {
+        "country": "叙利亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Syrian Arab Republic",
+        "iso3": "SYR"
+    },
+    {
+        "country": "古巴",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Cuba",
+        "iso3": "CUB"
+    },
+    {
+        "country": "史瓦帝尼",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Eswatini",
+        "iso3": "SWZ"
+    },
+    {
+        "country": "吉尔吉斯斯坦",
+        "type": "免签",
+        "rawRequirement": "Visa not required (conditional) / eVisa",
+        "stay": "21天/60天",
+        "note": "5至25人的团体游客可以通过预先批准的旅行社免签证进入吉尔吉斯斯坦，停留时间最长为21天。电子签证持有者必须通过玛纳斯国际机场或奥什机场或通过中国（伊尔克什坦和图尔嘎特）、哈萨克斯坦（阿克乔尔、阿克蒂莱克、查尔迪巴尔、春卡普卡）、塔吉克斯坦（博尔多博、库伦杜、克孜勒贝尔）和乌兹别克斯坦（多斯图克）的陆路入境。通过玛纳斯国际机场检查站抵达的中国公民，如果持有价值至少 500 美元的代金券（可在抵达玛纳斯国际机场时购买）以及前往其国籍国或自出发之日起 21 天后有权免签再次入境的第三国的往返机票，可免签停留最长 7 天；或持有美利坚合众国、大不列颠及北爱尔兰王国、申根区长期签证（3年以上），可免签停留7天，并有权自出发之日起21天后免签再次入境。",
+        "country_en": "Kyrgyzstan",
+        "iso3": "KGZ"
+    },
+    {
+        "country": "吉布提",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "90天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Djibouti",
+        "iso3": "DJI"
+    },
+    {
+        "country": "哈萨克斯坦",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "任何 180 天内的 90 天。",
+        "country_en": "Kazakhstan",
+        "iso3": "KAZ"
+    },
+    {
+        "country": "哥伦比亚",
+        "type": "常规签",
+        "rawRequirement": "Online Visa",
+        "stay": "",
+        "note": "国家签证可以由申根区成员国或美国签发的签证或居留许可替代，该签证或居留许可的有效期自抵达之日起至少有 180 天。",
+        "country_en": "Colombia",
+        "iso3": "COL"
+    },
+    {
+        "country": "哥斯达黎加",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人无需签证即可停留最多 30 天。国家签证可以用加拿大或美国签发的签证代替。",
+        "country_en": "Costa Rica",
+        "iso3": "CRI"
+    },
+    {
+        "country": "喀麦隆",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Cameroon",
+        "iso3": "CMR"
+    },
+    {
+        "country": "图瓦卢",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "1个月",
+        "note": "",
+        "country_en": "Tuvalu",
+        "iso3": "TUV"
+    },
+    {
+        "country": "土库曼斯坦",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Turkmenistan",
+        "iso3": "TKM"
+    },
+    {
+        "country": "土耳其",
+        "type": "免签",
+        "rawRequirement": "Visa not required[6]",
+        "stay": "90天",
+        "note": "任何 180 天内的 90 天。[151]",
+        "country_en": "Turkey",
+        "iso3": "TUR"
+    },
+    {
+        "country": "圣卢西亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "6周",
+        "note": "",
+        "country_en": "Saint Lucia",
+        "iso3": "LCA"
+    },
+    {
+        "country": "圣基茨和尼维斯",
+        "type": "常规签",
+        "rawRequirement": "Electronic Travel Authorisation",
+        "stay": "3个月",
+        "note": "",
+        "country_en": "Saint Kitts and Nevis",
+        "iso3": "KNA"
+    },
+    {
+        "country": "圣多美和普林西比",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "15天。",
+        "note": "持有美国和申根区签证的人不需要签证。持有因公护照的人不需要签证。",
+        "country_en": "Sao Tome and Principe",
+        "iso3": "STP"
+    },
+    {
+        "country": "圣文森特和格林纳丁斯",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Saint Vincent and the Grenadines",
+        "iso3": "VCT"
+    },
+    {
+        "country": "圣马力诺",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90 天。",
+        "note": "虽然官方不需要签证，但进入圣马力诺至少需要单次入境申根签证，因为它没有自己的机场设施，也没有边境管制。",
+        "country_en": "San Marino",
+        "iso3": "SMR"
+    },
+    {
+        "country": "圭亚那",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。据Timatic称，所有其他不免签证的游客都可以在出发前获得电子签证。",
+        "country_en": "Guyana",
+        "iso3": "GUY"
+    },
+    {
+        "country": "坦桑尼亚",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Tanzania, United Republic of",
+        "iso3": "TZA"
+    },
+    {
+        "country": "埃及",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "30天",
+        "note": "中国公民有资格申请电子签证。根据国际航空运输协会的规定，中国公民可以凭当地旅行社的担保函申请最长停留期限为一个月的落地签证。",
+        "country_en": "Egypt",
+        "iso3": "EGY"
+    },
+    {
+        "country": "埃塞俄比亚",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "90天",
+        "note": "落地签证只能在亚的斯亚贝巴博莱国际机场办理。电子签证持有者必须通过亚的斯亚贝巴博莱国际机场抵达。电子签证有效期为 30 天或 90 天。持有因公护照的人可免签证。",
+        "country_en": "Ethiopia",
+        "iso3": "ETH"
+    },
+    {
+        "country": "基里巴斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "任何 12 个月期间内的 90 天。",
+        "country_en": "Kiribati",
+        "iso3": "KIR"
+    },
+    {
+        "country": "塔吉克斯坦",
+        "type": "免签",
+        "rawRequirement": "Visa not required (conditional) / eVisa",
+        "stay": "14天/60天",
+        "note": "持有因公护照的人不需要签证。 55岁及以上护照持有者无需签证14天。",
+        "country_en": "Tajikistan",
+        "iso3": "TJK"
+    },
+    {
+        "country": "塞内加尔",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "30天",
+        "note": "持有因公护照的人不需要签证 30 天。",
+        "country_en": "Senegal",
+        "iso3": "SEN"
+    },
+    {
+        "country": "塞尔维亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "持有因公事务护照的人在 6 个月内不需要签证最多 90 天。长期居留（最多 180 天）签证免费签发。",
+        "country_en": "Serbia",
+        "iso3": "SRB"
+    },
+    {
+        "country": "塞拉利昂",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "3个月/30天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Sierra Leone",
+        "iso3": "SLE"
+    },
+    {
+        "country": "塞浦路斯",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有有效的两次或多次入境申根签证以及申根成员国颁发的居留许可的持有人无需持有短期停留签证即可进入塞浦路斯共和国，停留时间在任何 180 天的期限内不超过 90 天。",
+        "country_en": "Cyprus",
+        "iso3": "CYP"
+    },
+    {
+        "country": "塞舌尔",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "3个月",
+        "note": "",
+        "country_en": "Seychelles",
+        "iso3": "SYC"
+    },
+    {
+        "country": "墨西哥",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "国家签证可用加拿大、日本、英国、美国或申根区成员国签发的有效签证（除过境外的任何类别）或永久居留权代替，可免签证入境 180 天。智利或哥伦比亚永久居留权持有者可免签证入境 180 天。注意： 临时居留卡、许可证或这些国家颁发的其他文件（如欧盟临时居留卡、加拿大学习/工作许可证或美国 I-20 表格、EAD 卡）不能进入墨西哥。仅接受贴在护照上的有效签证（任何类别，过境签证除外）。",
+        "country_en": "Mexico",
+        "iso3": "MEX"
+    },
+    {
+        "country": "多哥",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "15天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Togo",
+        "iso3": "TGO"
+    },
+    {
+        "country": "多明尼加共和国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有加拿大、美国、英国、爱尔兰、塞浦路斯和任何申根区国家签发的签证或永久居留卡的人可以免签证入境，最长停留时间为 30 天。英国居民可在抵达时获得旅游卡，最长可停留 90 天。",
+        "country_en": "Dominican Republic",
+        "iso3": "DOM"
+    },
+    {
+        "country": "多米尼克",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Dominica",
+        "iso3": "DMA"
+    },
+    {
+        "country": "奥地利",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Austria",
+        "iso3": "AUT"
+    },
+    {
+        "country": "委内瑞拉",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "为旅游和商务旅客推出电子签证系统。持有因公护照的人不需要签证。",
+        "country_en": "Venezuela, Bolivarian Republic of",
+        "iso3": "VEN"
+    },
+    {
+        "country": "孟加拉国",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "30 天。",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Bangladesh",
+        "iso3": "BGD"
+    },
+    {
+        "country": "安哥拉",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "每次旅行 30 天，但任何 1 个日历年内不得超过 90 天，仅限旅游目的。游客必须持有返程/续程机票和酒店预订确认函。需要国际疫苗接种证书。",
+        "country_en": "Angola",
+        "iso3": "AGO"
+    },
+    {
+        "country": "安提瓜和巴布达",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "停留期限每次为30天，任意180天内不得超过90天。",
+        "country_en": "Antigua and Barbuda",
+        "iso3": "ATG"
+    },
+    {
+        "country": "安道尔",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "",
+        "note": "虽然官方不需要签证，但进入安道尔至少需要两次入境申根签证，因为它没有自己的机场设施。",
+        "country_en": "Andorra",
+        "iso3": "AND"
+    },
+    {
+        "country": "密克罗尼西亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Micronesia, Federated States of",
+        "iso3": "FSM"
+    },
+    {
+        "country": "尼加拉瓜",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Nicaragua",
+        "iso3": "NIC"
+    },
+    {
+        "country": "尼日利亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "90天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Nigeria",
+        "iso3": "NGA"
+    },
+    {
+        "country": "尼日尔",
+        "type": "常规签",
+        "rawRequirement": "eVisa",
+        "stay": "90天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Nigeria",
+        "iso3": "NGA"
+    },
+    {
+        "country": "尼泊尔",
+        "type": "落地签",
+        "rawRequirement": "Online Visa / Free visa on arrival",
+        "stay": "90天",
+        "note": "为中国游客免费签发签证。",
+        "country_en": "Nepal",
+        "iso3": "NPL"
+    },
+    {
+        "country": "巴哈马",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "3个月",
+        "note": "",
+        "country_en": "Bahamas",
+        "iso3": "BHS"
+    },
+    {
+        "country": "巴基斯坦",
+        "type": "电子签",
+        "rawRequirement": "Free eVisa",
+        "stay": "90天",
+        "note": "巴基斯坦电子签证费用免费。电子旅行授权，以获得商务和旅游目的落地签证。",
+        "country_en": "Pakistan",
+        "iso3": "PAK"
+    },
+    {
+        "country": "巴巴多斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Barbados",
+        "iso3": "BRB"
+    },
+    {
+        "country": "巴布亚新几内亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "持有因公护照的人不需要签证。参加注册和组团旅游的中国游客可免费获得30天单次入境旅游签证。",
+        "country_en": "Papua New Guinea",
+        "iso3": "PNG"
+    },
+    {
+        "country": "巴拉圭",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Paraguay",
+        "iso3": "PRY"
+    },
+    {
+        "country": "巴拿马",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "国家签证可以用澳大利亚、加拿大、美国、申根（入境后有效期为 6 个月）或英国签发的有效签证代替，有效期最长为 30 天。自2019年5月2日起，签发的签证有效期为5年，用于度假、商务和探亲目的。持有因公护照的人不需要签证。",
+        "country_en": "Panama",
+        "iso3": "PAN"
+    },
+    {
+        "country": "巴林",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "14天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Bahrain",
+        "iso3": "BHR"
+    },
+    {
+        "country": "巴西",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "30天",
+        "note": "自2024年2月19日起，签发的签证有效期为10年，用于度假、商务和探亲目的。巴西总统于2026年1月23日宣布，巴西将给予中国公民某些类别的短期签证豁免。",
+        "country_en": "Brazil",
+        "iso3": "BRA"
+    },
+    {
+        "country": "布基纳法索",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Burkina Faso",
+        "iso3": "BFA"
+    },
+    {
+        "country": "布隆迪",
+        "type": "落地签",
+        "rawRequirement": "Online Visa / Visa on arrival",
+        "stay": "1个月",
+        "note": "",
+        "country_en": "Burundi",
+        "iso3": "BDI"
+    },
+    {
+        "country": "希腊",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Greece",
+        "iso3": "GRC"
+    },
+    {
+        "country": "帕劳",
+        "type": "落地签",
+        "rawRequirement": "Free visa on arrival",
+        "stay": "30天",
+        "note": "中国政府于2018年8月宣布帕劳为非法团体旅游目的地，中国个人游客不受影响。",
+        "country_en": "Palau",
+        "iso3": "PLW"
+    },
+    {
+        "country": "德国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Germany",
+        "iso3": "DEU"
+    },
+    {
+        "country": "意大利",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Italy",
+        "iso3": "ITA"
+    },
+    {
+        "country": "所罗门群岛",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "普通护照互免签证协议于2024年12月28日生效。",
+        "country_en": "Solomon Islands",
+        "iso3": "SLB"
+    },
+    {
+        "country": "拉脱维亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Latvia",
+        "iso3": "LVA"
+    },
+    {
+        "country": "挪威",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Norway",
+        "iso3": "NOR"
+    },
+    {
+        "country": "捷克共和国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Czechia",
+        "iso3": "CZE"
+    },
+    {
+        "country": "摩尔多瓦",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "除持有欧盟成员国之一或申根协定缔约国之一签发的居留许可或有效签证（不包括过境签证）外，大不列颠及北爱尔兰联合王国、美利坚合众国、加拿大可在有效期内前往摩尔多瓦共和国。持有因公护照的人不需要签证。中国公民可以在线申请签证，无需邀请函。",
+        "country_en": "Moldova, Republic of",
+        "iso3": "MDA"
+    },
+    {
+        "country": "摩洛哥",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Morocco",
+        "iso3": "MAR"
+    },
+    {
+        "country": "摩纳哥",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Monaco",
+        "iso3": "MCO"
+    },
+    {
+        "country": "文莱",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "14天",
+        "note": "",
+        "country_en": "Brunei Darussalam",
+        "iso3": "BRN"
+    },
+    {
+        "country": "斐济",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "4个月",
+        "note": "",
+        "country_en": "Fiji",
+        "iso3": "FJI"
+    },
+    {
+        "country": "斯洛伐克",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Slovakia",
+        "iso3": "SVK"
+    },
+    {
+        "country": "斯洛文尼亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Slovenia",
+        "iso3": "SVN"
+    },
+    {
+        "country": "斯里兰卡",
+        "type": "落地签",
+        "rawRequirement": "Free ETA / Visa on arrival",
+        "stay": "30天",
+        "note": "标准访客签证允许在任何 6 个月期间内停留 60 天。签证费用（标准访客签证）：南盟 - 35 美元 非南盟 - 75 美元 电子签证类别将额外收取 18.50 美元服务费。如果从任何斯里兰卡机场过境，则可豁免电子签证（2 天过境期）。",
+        "country_en": "Sri Lanka",
+        "iso3": "LKA"
+    },
+    {
+        "country": "新加坡",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "持有中国护照以外旅行证件的，须提前办理签证或免签过境。",
+        "country_en": "Singapore",
+        "iso3": "SGP"
+    },
+    {
+        "country": "新西兰",
+        "type": "常规签",
+        "rawRequirement": "Online Visa required",
+        "stay": "",
+        "note": "可以使用 eGate 进入。澳大利亚永久居民签证或居民返回签证的持有者可在抵达时获得新西兰居民签证，允许无限期居留（根据跨塔斯曼旅行安排），但须满足品格要求并在出发前获得电子旅行授权。持有 NZaTA 往返澳大利亚且在机场停留时间不超过 24 小时的乘客无需过境签证。签发的签证有效期最长为5年。从2025年11月3日至2026年11月2日，持有有效澳大利亚旅游、工作、学生或家庭签证从澳大利亚出发的中国游客将可以凭NZeTA前往新西兰旅行最多3个月。持有 NZaTA 的旅客在机场停留时间不超过 24 小时无需过境签证。",
+        "country_en": "New Zealand",
+        "iso3": "NZL"
+    },
+    {
+        "country": "日本",
+        "type": "电子签",
+        "rawRequirement": "eVisa (conditional)",
+        "stay": "",
+        "note": "在成田机场或羽田机场过境的乘客可以申请海岸通行证，以便在没有签证的情况下进入日本不超过 72 小时，具体取决于移民当局的酌情权和某些条件。乘坐经批准的游轮的乘客如果停留时间不超过 15 天，则不需要签证。如果居住在巴西、柬埔寨、加拿大、沙特阿拉伯、新加坡、南非、中国台湾、阿拉伯联合酋长国、英国、美国，则可以使用电子签证。这是单次入境签证，停留期限为90天。如果居住在蒙古，则可以使用电子签证。这是单次入境签证，停留期限为90天。自2023年12月15日起，电子签证必须通过日本海外机构认可的旅行社申请。电子签证也适用于居住在中国大陆（香港和澳门除外）的中国护照持有者，为单次入境签证，停留期限为30天。自 2023 年 6 月 19 日起，电子签证申请必须通过日本海外机构认可的旅行社进行。电子签证将在旅行社准备好通过 JAPAN e-Visa 申请时签发。对于居住在其他地区的中国公民，需要申请签证。所有地区均可获得多次入境小插曲式签证，有效期为 3 年或 5 年。",
+        "country_en": "Japan",
+        "iso3": "JPN"
+    },
+    {
+        "country": "智利",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "国家签证可以用加拿大或美国签发的签证（自抵达之日起有效期至少为 6 个月）或 PR 卡（绿卡）代替。",
+        "country_en": "Chile",
+        "iso3": "CHL"
+    },
+    {
+        "country": "柬埔寨",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "30天",
+        "note": "有效期为 30 天的签证可在抵达时或在线获取。柬埔寨决定对中国公民试行免签，允许2026年6月15日至10月15日期间停留14天。",
+        "country_en": "Cambodia",
+        "iso3": "KHM"
+    },
+    {
+        "country": "格林纳达",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Grenada",
+        "iso3": "GRD"
+    },
+    {
+        "country": "格鲁吉亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "持有欧盟/欧洲自由贸易联盟/海湾合作委员会国家、欧盟国家海外领土（安圭拉、蒙特塞拉特、皮特凯恩、圣赫勒拿、阿森松岛和特里斯坦达库尼亚群岛除外）、澳大利亚、加拿大、以色列、日本、新西兰、韩国、英国或美国的有效签证或居留许可 - 180 天内最多可免签停留 90 天。否则，将适用默认的 30 天期限。",
+        "country_en": "Georgia",
+        "iso3": "GEO"
+    },
+    {
+        "country": "梵蒂冈城",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Holy See (Vatican City State)",
+        "iso3": "VAT"
+    },
+    {
+        "country": "比利时",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Belgium",
+        "iso3": "BEL"
+    },
+    {
+        "country": "毛里塔尼亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "可在努瓦克肖特-乌姆图恩西国际机场购买。持有因公护照的人不需要签证。",
+        "country_en": "Mauritania",
+        "iso3": "MRT"
+    },
+    {
+        "country": "毛里求斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Mauritius",
+        "iso3": "MUS"
+    },
+    {
+        "country": "汤加",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Tonga",
+        "iso3": "TON"
+    },
+    {
+        "country": "沙特阿拉伯",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "90天",
+        "note": "",
+        "country_en": "Saudi Arabia",
+        "iso3": "SAU"
+    },
+    {
+        "country": "法国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "France",
+        "iso3": "FRA"
+    },
+    {
+        "country": "波兰",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Poland",
+        "iso3": "POL"
+    },
+    {
+        "country": "波斯尼亚和黑塞哥维那",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "任意 180 天内的 90 天。",
+        "country_en": "Bosnia and Herzegovina",
+        "iso3": "BIH"
+    },
+    {
+        "country": "泰国",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "60天",
+        "note": "停留期限每次为60天，任意180天内不得超过90天。在泰国期间可以延长 60 天的签证。",
+        "country_en": "Thailand",
+        "iso3": "THA"
+    },
+    {
+        "country": "津巴布韦",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "1个月",
+        "note": "还有资格获得允许进入赞比亚的通用签证。",
+        "country_en": "Zimbabwe",
+        "iso3": "ZWE"
+    },
+    {
+        "country": "洪都拉斯",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "国家签证可以用加拿大、美国或申根区成员国签发的有效签证或英国、日本、新加坡、澳大利亚和新西兰的居留许可代替。",
+        "country_en": "Honduras",
+        "iso3": "HND"
+    },
+    {
+        "country": "海地",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "3个月",
+        "note": "所有非海地护照持有者均须在抵达时支付 10 美元的旅游费。",
+        "country_en": "Haiti",
+        "iso3": "HTI"
+    },
+    {
+        "country": "澳大利亚",
+        "type": "常规签",
+        "rawRequirement": "Online Visa required",
+        "stay": "",
+        "note": "可以在线申请（在线访客 e600 签证和在线 e400 工作签证）。中国公民签证有效期为1年、3年、5年或10年，由于中国大陆未设立签证申请中心，在中国大陆以外的签证申请中心额外登记个人信息需申请10年签证。中国生物识别护照持有者在抵达澳大利亚时使用自动护照检查 SmartGate。",
+        "country_en": "Australia",
+        "iso3": "AUS"
+    },
+    {
+        "country": "爱尔兰",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "2021 年 10 月之前，国家签证可以替换为有效的 C 签证或由英国签发的 BIVS 背书的签证。仅当共同旅行区的第一入境点位于英国时才允许入境。",
+        "country_en": "Ireland",
+        "iso3": "IRL"
+    },
+    {
+        "country": "爱沙尼亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Estonia",
+        "iso3": "EST"
+    },
+    {
+        "country": "牙买加",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Jamaica",
+        "iso3": "JAM"
+    },
+    {
+        "country": "特立尼达和多巴哥",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Trinidad and Tobago",
+        "iso3": "TTO"
+    },
+    {
+        "country": "玻利维亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "游客必须填写在线申请表，但仍需要前往大使馆才能获得贴纸签证。持有因公护照的人不需要签证。",
+        "country_en": "Bolivia, Plurinational State of",
+        "iso3": "BOL"
+    },
+    {
+        "country": "瑙鲁",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "90天",
+        "note": "据Timatic称，中国公民可获得有效期最长为90天的落地签证。持有因公护照的人不需要签证。",
+        "country_en": "Nauru",
+        "iso3": "NRU"
+    },
+    {
+        "country": "瑞典",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Sweden",
+        "iso3": "SWE"
+    },
+    {
+        "country": "瑞士",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Switzerland",
+        "iso3": "CHE"
+    },
+    {
+        "country": "瓦努阿图",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Vanuatu",
+        "iso3": "VUT"
+    },
+    {
+        "country": "白俄罗斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "30 天免签证，任何 1 个日历年内最多可停留 90 天。持有因公护照的人在最长 30 天的时间内不需要签证。",
+        "country_en": "Belarus",
+        "iso3": "BLR"
+    },
+    {
+        "country": "科威特",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "科威特政府仅向持有普通护照、持有有效英国、美国或申根签证的中国公民或拥有海湾合作委员会国家居留权的中国公民颁发旅行签证。",
+        "country_en": "Kuwait",
+        "iso3": "KWT"
+    },
+    {
+        "country": "科摩罗",
+        "type": "落地签",
+        "rawRequirement": "Visa on arrival",
+        "stay": "45天",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Comoros",
+        "iso3": "COM"
+    },
+    {
+        "country": "科特迪瓦",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "3个月",
+        "note": "电子签证持有者必须通过布埃特港机场抵达 持有公共事务护照不需要签证。",
+        "country_en": "Côte d'Ivoire",
+        "iso3": "CIV"
+    },
+    {
+        "country": "秘鲁",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有有效美国、加拿大、澳大利亚、申根区或英国签证或永久居民许可证的中国公民可以出于旅游或商务目的免签证停留长达 180 天。签证自抵达之日起有效期必须至少为 6 个月。",
+        "country_en": "Peru",
+        "iso3": "PER"
+    },
+    {
+        "country": "突尼斯",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "仅供旅游目的。入境时需提供付费酒店预订单（Bon-Voucher）以及与在突尼斯停留时间相匹配的往返机票。",
+        "country_en": "Tunisia",
+        "iso3": "TUN"
+    },
+    {
+        "country": "立陶宛",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Lithuania",
+        "iso3": "LTU"
+    },
+    {
+        "country": "索马里",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Somalia",
+        "iso3": "SOM"
+    },
+    {
+        "country": "约旦",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "",
+        "note": "抵达后即可获取签证，费用总计 40 约旦第纳尔，可在大多数国际入境口岸和陆地边境口岸办理。 （侯赛因国王/艾伦比桥除外）",
+        "country_en": "Jordan",
+        "iso3": "JOR"
+    },
+    {
+        "country": "纳米比亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "3个月",
+        "note": "纳米比亚当局提议免除中国公民的签证要求。",
+        "country_en": "Namibia",
+        "iso3": "NAM"
+    },
+    {
+        "country": "缅甸",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "28天",
+        "note": "缅甸政府的签证政策不适用于中央政府未实际控制的民兵控制地区。电子签证持有者必须通过仰光、内比都或曼德勒机场或通过泰国（大其力、妙瓦底和高当）或印度（Rih Khaw Dar 和 Tamu）的陆地边境口岸抵达。电子签证可用于旅游（允许停留 28 天）或商务（允许停留 70 天）目的。 2026 年 8 月 29 日之前，可在仰光、内比都或曼德勒机场签发落地签证，有效期为 30 天。边境省份的居民可以申请出入境通行证，该通行证与边境自动化控制系统配合使用，以加快过境速度。",
+        "country_en": "Myanmar",
+        "iso3": "MMR"
+    },
+    {
+        "country": "罗马尼亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Romania",
+        "iso3": "ROU"
+    },
+    {
+        "country": "美国",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "获得签证的中国公民通常会获得“120 个月多次入境 B1/B2 组合签证”。但此类B1/B2签证仅限中共党员及其配偶和21岁以下子女“一个月单次入境”。 10 年多次入境 B 签证持有者必须每两年通过电子签证更新系统 (EVUS) 提供更新。北马里亚纳群岛不需要签证。",
+        "country_en": "United States",
+        "iso3": "USA"
+    },
+    {
+        "country": "老挝",
+        "type": "落地签",
+        "rawRequirement": "eVisa / Visa on arrival",
+        "stay": "30天",
+        "note": "7月1日至12月31日，由旅行社陪同的5人团队游客可通过在老挝注册的旅行社安排行程并提前申请免签，免签入境老挝15天。 33 个过境点中有 18 个仅对普通签证持有者开放。电子签证可用于通过琅勃拉邦、巴色和万象国际机场、3 座泰老友谊大桥、磨丁（公路和铁路）和万象（Khamsavath 火车站）进入老挝。琅勃拉邦、巴色和万象国际机场、4 座泰老友谊大桥和 7 个边境口岸可办理落地签证。持有因公护照的人不需要签证。",
+        "country_en": "Lao People's Democratic Republic",
+        "iso3": "LAO"
+    },
+    {
+        "country": "肯尼亚",
+        "type": "常规签",
+        "rawRequirement": "Electronic Travel Authorisation",
+        "stay": "90天",
+        "note": "申请最多可以在旅行前 90 天提交，并且必须至少提前 3 天提交。 eTA 费用为 32.50 美元。需要提供游客计划入住的酒店的预订证明（如果与朋友一起入住，也可以提供邀请函）。如果来自黄热病流行国家，则需要提供黄热病疫苗接种证明。",
+        "country_en": "Kenya",
+        "iso3": "KEN"
+    },
+    {
+        "country": "芬兰",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Finland",
+        "iso3": "FIN"
+    },
+    {
+        "country": "苏丹",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Sudan",
+        "iso3": "SDN"
+    },
+    {
+        "country": "苏里南",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "客人必须在抵达前在线支付 50 美元或 50 欧元的入场费。还提供多次入境电子签证。",
+        "country_en": "Suriname",
+        "iso3": "SUR"
+    },
+    {
+        "country": "英国和皇家属地",
+        "type": "常规签",
+        "rawRequirement": "Visa required[6]",
+        "stay": "",
+        "note": "如果持有 BIVS 认可的有效爱尔兰签证，则无需签证。仅当共同旅行区的第一入境点位于爱尔兰时才允许入境。[155]签证的有效期为 2,5 或 10 年，用于度假和商务目的。如果持有有效的美国、加拿大、澳大利亚（需要实体贴纸签证）、新西兰、爱尔兰（仅限生物识别签证）和申根（仅限 D 签证或居留许可）签证或永久居留许可，则不需要过境签证。如果不在空侧，则需要直接或通过合理航线从这些国家和地区出发或飞往这些国家和地区。",
+        "country_en": "United Kingdom",
+        "iso3": "GBR"
+    },
+    {
+        "country": "荷兰",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Netherlands",
+        "iso3": "NLD"
+    },
+    {
+        "country": "莫桑比克",
+        "type": "电子签",
+        "rawRequirement": "Electronic Travel Authorization",
+        "stay": "30天",
+        "note": "游客必须在出行前至少 48 小时在电子签证平台上登记预计到达时间，并支付 650 赞比亚先令的手续费。可以再延长 30 天。",
+        "country_en": "Mozambique",
+        "iso3": "MOZ"
+    },
+    {
+        "country": "莱索托",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Lesotho",
+        "iso3": "LSO"
+    },
+    {
+        "country": "菲律宾",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "14天",
+        "note": "发给中国公民的电子签证仅适用于单次入境。有效电子签证的持有者必须通过尼诺·阿基诺国际机场（马尼拉）或麦克坦-宿务国际机场（宿务）抵达。持有澳大利亚、日本、加拿大、美国或申根区签证的人无需签证即可出于旅游目的停留最多 7 天。从2026年1月16日至2027年1月15日，试行最长14天的免签政策。",
+        "country_en": "Philippines",
+        "iso3": "PHL"
+    },
+    {
+        "country": "萨尔瓦多",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "El Salvador",
+        "iso3": "SLV"
+    },
+    {
+        "country": "萨摩亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "任意 180 天内的 90 天。",
+        "country_en": "Samoa",
+        "iso3": "WSM"
+    },
+    {
+        "country": "葡萄牙",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Portugal",
+        "iso3": "PRT"
+    },
+    {
+        "country": "蒙古",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Mongolia",
+        "iso3": "MNG"
+    },
+    {
+        "country": "西班牙",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Spain",
+        "iso3": "ESP"
+    },
+    {
+        "country": "贝宁",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Benin",
+        "iso3": "BEN"
+    },
+    {
+        "country": "赞比亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "还有资格获得允许进入津巴布韦的通用签证。",
+        "country_en": "Zambia",
+        "iso3": "ZMB"
+    },
+    {
+        "country": "赤道几内亚",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "",
+        "country_en": "Equatorial Guinea",
+        "iso3": "GNQ"
+    },
+    {
+        "country": "越南",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "",
+        "note": "电子签证的有效期为 90 天，可多次入境。持有因公护照的人不需要签证。富国岛 30 天不需要签证，包括在内排国际机场或新山一国际机场过境。落地签证领取可以通过旅行社在线安排，并可在胡志明市、河内、岘港、芽庄和富国岛机场办理。带有“公务”字样的普通护照可以免签证进入越南。",
+        "country_en": "Viet Nam",
+        "iso3": "VNM"
+    },
+    {
+        "country": "阿塞拜疆",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "停留期限每次为30天，任意180天内不得超过90天。",
+        "country_en": "Azerbaijan",
+        "iso3": "AZE"
+    },
+    {
+        "country": "阿富汗",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "电子签证的单次入境有效期最长为 30 天，并且只能在抵达喀布尔机场时使用。需要一封介绍信（来自雇主/组织/大学/等）。",
+        "country_en": "Afghanistan",
+        "iso3": "AFG"
+    },
+    {
+        "country": "阿尔及利亚",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Algeria",
+        "iso3": "DZA"
+    },
+    {
+        "country": "阿尔巴尼亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "任意 180 天内的 90 天。",
+        "country_en": "Albania",
+        "iso3": "ALB"
+    },
+    {
+        "country": "阿拉伯联合酋长国",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "90天",
+        "note": "任意 180 天内的 90 天。",
+        "country_en": "United Arab Emirates",
+        "iso3": "ARE"
+    },
+    {
+        "country": "阿曼",
+        "type": "免签",
+        "rawRequirement": "Visa not required / eVisa",
+        "stay": "14天/30天",
+        "note": "中国公民也有资格获得有效期为 30 天的单次/多次入境电子签证。",
+        "country_en": "Oman",
+        "iso3": "OMN"
+    },
+    {
+        "country": "阿根廷",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "电子旅行授权 (AVE) 仅颁发给已持有美国或申根签证的人士。它必须在旅行前获得批准，并且对于旅游目的有效。自2017年10月1日起，签证有效期为10年。自 2025 年 7 月 22 日起，持有有效美国签证的人士无需签证即可停留最多 30 天，并可再延长一次 30 天。阿根廷外交部网站称，中国公民前往阿根廷需签证。",
+        "country_en": "Argentina",
+        "iso3": "ARG"
+    },
+    {
+        "country": "韩国",
+        "type": "常规签",
+        "rawRequirement": "Online Visa required",
+        "stay": "",
+        "note": "在下列情况下，中国公民可以免签证进入韩国。直接或过境游客前往济州岛停留 30 天以内无需签证。往返美国、加拿大和新西兰等第三国的过境。中国团体游客从中国（含香港、澳门）出发前往韩国仁川、金浦、金海、清州、务安、大邱、襄阳国际机场，行程5天内（襄阳机场10天）后转乘韩国国内航班飞往济州岛。持有日本团体旅游签证从中国出发经韩国前往日本的中国团体游客，以及从日本出发经韩国前往中国或第三国的中国团体游客。自2025年9月29日至2026年6月30日，在指定旅行社注册的3人以上团队旅游的中国游客，可免办签证赴韩国停留最长15天。",
+        "country_en": "Korea, Republic of",
+        "iso3": "KOR"
+    },
+    {
+        "country": "马尔代夫",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Maldives",
+        "iso3": "MDV"
+    },
+    {
+        "country": "马拉维",
+        "type": "电子签",
+        "rawRequirement": "eVisa",
+        "stay": "30天",
+        "note": "",
+        "country_en": "Malawi",
+        "iso3": "MWI"
+    },
+    {
+        "country": "马来西亚",
+        "type": "免签",
+        "rawRequirement": "Visa not required",
+        "stay": "30天",
+        "note": "任何 180 天内的 90 天。",
+        "country_en": "Malaysia",
+        "iso3": "MYS"
+    },
+    {
+        "country": "马绍尔群岛",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "",
+        "country_en": "Marshall Islands",
+        "iso3": "MHL"
+    },
+    {
+        "country": "马耳他",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+        "country_en": "Malta",
+        "iso3": "MLT"
+    },
+    {
+        "country": "马达加斯加",
+        "type": "落地签",
+        "rawRequirement": "Online Visa / Visa on arrival",
+        "stay": "60天",
+        "note": "",
+        "country_en": "Madagascar",
+        "iso3": "MDG"
+    },
+    {
+        "country": "马里",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "持有因公护照的人不需要签证。",
+        "country_en": "Mali",
+        "iso3": "MLI"
+    },
+    {
+        "country": "黎巴嫩",
+        "type": "落地签",
+        "rawRequirement": "Free visa on arrival",
+        "stay": "1个月",
+        "note": "可再延长 2 个月。",
+        "country_en": "Lebanon",
+        "iso3": "LBN"
+    },
+    {
+        "country": "黑山",
+        "type": "常规签",
+        "rawRequirement": "Visa required",
+        "stay": "",
+        "note": "国家签证可以用有效的申根签证、澳大利亚、塞浦路斯、日本、加拿大、新西兰、爱尔兰、美利坚合众国和英国的有效签证代替。还有申根区国家、澳大利亚、塞浦路斯、日本、加拿大、新西兰、爱尔兰、美利坚合众国和英国的居留许可，每次停留最多 30 天。",
+        "country_en": "Montenegro",
+        "iso3": "MNE"
+    }
+];
+
+    const WORLD_COUNTRIES = [
+    {
+        "iso2": "AW",
+        "iso3": "ABW",
+        "name": "Aruba"
+    },
+    {
+        "iso2": "AF",
+        "iso3": "AFG",
+        "name": "Afghanistan"
+    },
+    {
+        "iso2": "AO",
+        "iso3": "AGO",
+        "name": "Angola"
+    },
+    {
+        "iso2": "AI",
+        "iso3": "AIA",
+        "name": "Anguilla"
+    },
+    {
+        "iso2": "AX",
+        "iso3": "ALA",
+        "name": "Åland Islands"
+    },
+    {
+        "iso2": "AL",
+        "iso3": "ALB",
+        "name": "Albania"
+    },
+    {
+        "iso2": "AD",
+        "iso3": "AND",
+        "name": "Andorra"
+    },
+    {
+        "iso2": "AE",
+        "iso3": "ARE",
+        "name": "United Arab Emirates"
+    },
+    {
+        "iso2": "AR",
+        "iso3": "ARG",
+        "name": "Argentina"
+    },
+    {
+        "iso2": "AM",
+        "iso3": "ARM",
+        "name": "Armenia"
+    },
+    {
+        "iso2": "AS",
+        "iso3": "ASM",
+        "name": "American Samoa"
+    },
+    {
+        "iso2": "AQ",
+        "iso3": "ATA",
+        "name": "Antarctica"
+    },
+    {
+        "iso2": "TF",
+        "iso3": "ATF",
+        "name": "French Southern Territories"
+    },
+    {
+        "iso2": "AG",
+        "iso3": "ATG",
+        "name": "Antigua and Barbuda"
+    },
+    {
+        "iso2": "AU",
+        "iso3": "AUS",
+        "name": "Australia"
+    },
+    {
+        "iso2": "AT",
+        "iso3": "AUT",
+        "name": "Austria"
+    },
+    {
+        "iso2": "AZ",
+        "iso3": "AZE",
+        "name": "Azerbaijan"
+    },
+    {
+        "iso2": "BI",
+        "iso3": "BDI",
+        "name": "Burundi"
+    },
+    {
+        "iso2": "BE",
+        "iso3": "BEL",
+        "name": "Belgium"
+    },
+    {
+        "iso2": "BJ",
+        "iso3": "BEN",
+        "name": "Benin"
+    },
+    {
+        "iso2": "BQ",
+        "iso3": "BES",
+        "name": "Bonaire, Sint Eustatius and Saba"
+    },
+    {
+        "iso2": "BF",
+        "iso3": "BFA",
+        "name": "Burkina Faso"
+    },
+    {
+        "iso2": "BD",
+        "iso3": "BGD",
+        "name": "Bangladesh"
+    },
+    {
+        "iso2": "BG",
+        "iso3": "BGR",
+        "name": "Bulgaria"
+    },
+    {
+        "iso2": "BH",
+        "iso3": "BHR",
+        "name": "Bahrain"
+    },
+    {
+        "iso2": "BS",
+        "iso3": "BHS",
+        "name": "Bahamas"
+    },
+    {
+        "iso2": "BA",
+        "iso3": "BIH",
+        "name": "Bosnia and Herzegovina"
+    },
+    {
+        "iso2": "BL",
+        "iso3": "BLM",
+        "name": "Saint Barthélemy"
+    },
+    {
+        "iso2": "BY",
+        "iso3": "BLR",
+        "name": "Belarus"
+    },
+    {
+        "iso2": "BZ",
+        "iso3": "BLZ",
+        "name": "Belize"
+    },
+    {
+        "iso2": "BM",
+        "iso3": "BMU",
+        "name": "Bermuda"
+    },
+    {
+        "iso2": "BO",
+        "iso3": "BOL",
+        "name": "Bolivia, Plurinational State of"
+    },
+    {
+        "iso2": "BR",
+        "iso3": "BRA",
+        "name": "Brazil"
+    },
+    {
+        "iso2": "BB",
+        "iso3": "BRB",
+        "name": "Barbados"
+    },
+    {
+        "iso2": "BN",
+        "iso3": "BRN",
+        "name": "Brunei Darussalam"
+    },
+    {
+        "iso2": "BT",
+        "iso3": "BTN",
+        "name": "Bhutan"
+    },
+    {
+        "iso2": "BV",
+        "iso3": "BVT",
+        "name": "Bouvet Island"
+    },
+    {
+        "iso2": "BW",
+        "iso3": "BWA",
+        "name": "Botswana"
+    },
+    {
+        "iso2": "CF",
+        "iso3": "CAF",
+        "name": "Central African Republic"
+    },
+    {
+        "iso2": "CA",
+        "iso3": "CAN",
+        "name": "Canada"
+    },
+    {
+        "iso2": "CC",
+        "iso3": "CCK",
+        "name": "Cocos (Keeling) Islands"
+    },
+    {
+        "iso2": "CH",
+        "iso3": "CHE",
+        "name": "Switzerland"
+    },
+    {
+        "iso2": "CL",
+        "iso3": "CHL",
+        "name": "Chile"
+    },
+    {
+        "iso2": "CN",
+        "iso3": "CHN",
+        "name": "China"
+    },
+    {
+        "iso2": "CI",
+        "iso3": "CIV",
+        "name": "Côte d'Ivoire"
+    },
+    {
+        "iso2": "CM",
+        "iso3": "CMR",
+        "name": "Cameroon"
+    },
+    {
+        "iso2": "CD",
+        "iso3": "COD",
+        "name": "Congo, The Democratic Republic of the"
+    },
+    {
+        "iso2": "CG",
+        "iso3": "COG",
+        "name": "Congo"
+    },
+    {
+        "iso2": "CK",
+        "iso3": "COK",
+        "name": "Cook Islands"
+    },
+    {
+        "iso2": "CO",
+        "iso3": "COL",
+        "name": "Colombia"
+    },
+    {
+        "iso2": "KM",
+        "iso3": "COM",
+        "name": "Comoros"
+    },
+    {
+        "iso2": "CV",
+        "iso3": "CPV",
+        "name": "Cabo Verde"
+    },
+    {
+        "iso2": "CR",
+        "iso3": "CRI",
+        "name": "Costa Rica"
+    },
+    {
+        "iso2": "CU",
+        "iso3": "CUB",
+        "name": "Cuba"
+    },
+    {
+        "iso2": "CW",
+        "iso3": "CUW",
+        "name": "Curaçao"
+    },
+    {
+        "iso2": "CX",
+        "iso3": "CXR",
+        "name": "Christmas Island"
+    },
+    {
+        "iso2": "KY",
+        "iso3": "CYM",
+        "name": "Cayman Islands"
+    },
+    {
+        "iso2": "CY",
+        "iso3": "CYP",
+        "name": "Cyprus"
+    },
+    {
+        "iso2": "CZ",
+        "iso3": "CZE",
+        "name": "Czechia"
+    },
+    {
+        "iso2": "DE",
+        "iso3": "DEU",
+        "name": "Germany"
+    },
+    {
+        "iso2": "DJ",
+        "iso3": "DJI",
+        "name": "Djibouti"
+    },
+    {
+        "iso2": "DM",
+        "iso3": "DMA",
+        "name": "Dominica"
+    },
+    {
+        "iso2": "DK",
+        "iso3": "DNK",
+        "name": "Denmark"
+    },
+    {
+        "iso2": "DO",
+        "iso3": "DOM",
+        "name": "Dominican Republic"
+    },
+    {
+        "iso2": "DZ",
+        "iso3": "DZA",
+        "name": "Algeria"
+    },
+    {
+        "iso2": "EC",
+        "iso3": "ECU",
+        "name": "Ecuador"
+    },
+    {
+        "iso2": "EG",
+        "iso3": "EGY",
+        "name": "Egypt"
+    },
+    {
+        "iso2": "ER",
+        "iso3": "ERI",
+        "name": "Eritrea"
+    },
+    {
+        "iso2": "EH",
+        "iso3": "ESH",
+        "name": "Western Sahara"
+    },
+    {
+        "iso2": "ES",
+        "iso3": "ESP",
+        "name": "Spain"
+    },
+    {
+        "iso2": "EE",
+        "iso3": "EST",
+        "name": "Estonia"
+    },
+    {
+        "iso2": "ET",
+        "iso3": "ETH",
+        "name": "Ethiopia"
+    },
+    {
+        "iso2": "FI",
+        "iso3": "FIN",
+        "name": "Finland"
+    },
+    {
+        "iso2": "FJ",
+        "iso3": "FJI",
+        "name": "Fiji"
+    },
+    {
+        "iso2": "FK",
+        "iso3": "FLK",
+        "name": "Falkland Islands (Malvinas)"
+    },
+    {
+        "iso2": "FR",
+        "iso3": "FRA",
+        "name": "France"
+    },
+    {
+        "iso2": "FO",
+        "iso3": "FRO",
+        "name": "Faroe Islands"
+    },
+    {
+        "iso2": "FM",
+        "iso3": "FSM",
+        "name": "Micronesia, Federated States of"
+    },
+    {
+        "iso2": "GA",
+        "iso3": "GAB",
+        "name": "Gabon"
+    },
+    {
+        "iso2": "GB",
+        "iso3": "GBR",
+        "name": "United Kingdom"
+    },
+    {
+        "iso2": "GE",
+        "iso3": "GEO",
+        "name": "Georgia"
+    },
+    {
+        "iso2": "GG",
+        "iso3": "GGY",
+        "name": "Guernsey"
+    },
+    {
+        "iso2": "GH",
+        "iso3": "GHA",
+        "name": "Ghana"
+    },
+    {
+        "iso2": "GI",
+        "iso3": "GIB",
+        "name": "Gibraltar"
+    },
+    {
+        "iso2": "GN",
+        "iso3": "GIN",
+        "name": "Guinea"
+    },
+    {
+        "iso2": "GP",
+        "iso3": "GLP",
+        "name": "Guadeloupe"
+    },
+    {
+        "iso2": "GM",
+        "iso3": "GMB",
+        "name": "Gambia"
+    },
+    {
+        "iso2": "GW",
+        "iso3": "GNB",
+        "name": "Guinea-Bissau"
+    },
+    {
+        "iso2": "GQ",
+        "iso3": "GNQ",
+        "name": "Equatorial Guinea"
+    },
+    {
+        "iso2": "GR",
+        "iso3": "GRC",
+        "name": "Greece"
+    },
+    {
+        "iso2": "GD",
+        "iso3": "GRD",
+        "name": "Grenada"
+    },
+    {
+        "iso2": "GL",
+        "iso3": "GRL",
+        "name": "Greenland"
+    },
+    {
+        "iso2": "GT",
+        "iso3": "GTM",
+        "name": "Guatemala"
+    },
+    {
+        "iso2": "GF",
+        "iso3": "GUF",
+        "name": "French Guiana"
+    },
+    {
+        "iso2": "GU",
+        "iso3": "GUM",
+        "name": "Guam"
+    },
+    {
+        "iso2": "GY",
+        "iso3": "GUY",
+        "name": "Guyana"
+    },
+    {
+        "iso2": "HK",
+        "iso3": "HKG",
+        "name": "Hong Kong"
+    },
+    {
+        "iso2": "HM",
+        "iso3": "HMD",
+        "name": "Heard Island and McDonald Islands"
+    },
+    {
+        "iso2": "HN",
+        "iso3": "HND",
+        "name": "Honduras"
+    },
+    {
+        "iso2": "HR",
+        "iso3": "HRV",
+        "name": "Croatia"
+    },
+    {
+        "iso2": "HT",
+        "iso3": "HTI",
+        "name": "Haiti"
+    },
+    {
+        "iso2": "HU",
+        "iso3": "HUN",
+        "name": "Hungary"
+    },
+    {
+        "iso2": "ID",
+        "iso3": "IDN",
+        "name": "Indonesia"
+    },
+    {
+        "iso2": "IM",
+        "iso3": "IMN",
+        "name": "Isle of Man"
+    },
+    {
+        "iso2": "IN",
+        "iso3": "IND",
+        "name": "India"
+    },
+    {
+        "iso2": "IO",
+        "iso3": "IOT",
+        "name": "British Indian Ocean Territory"
+    },
+    {
+        "iso2": "IE",
+        "iso3": "IRL",
+        "name": "Ireland"
+    },
+    {
+        "iso2": "IR",
+        "iso3": "IRN",
+        "name": "Iran, Islamic Republic of"
+    },
+    {
+        "iso2": "IQ",
+        "iso3": "IRQ",
+        "name": "Iraq"
+    },
+    {
+        "iso2": "IS",
+        "iso3": "ISL",
+        "name": "Iceland"
+    },
+    {
+        "iso2": "IL",
+        "iso3": "ISR",
+        "name": "Israel"
+    },
+    {
+        "iso2": "IT",
+        "iso3": "ITA",
+        "name": "Italy"
+    },
+    {
+        "iso2": "JM",
+        "iso3": "JAM",
+        "name": "Jamaica"
+    },
+    {
+        "iso2": "JE",
+        "iso3": "JEY",
+        "name": "Jersey"
+    },
+    {
+        "iso2": "JO",
+        "iso3": "JOR",
+        "name": "Jordan"
+    },
+    {
+        "iso2": "JP",
+        "iso3": "JPN",
+        "name": "Japan"
+    },
+    {
+        "iso2": "KZ",
+        "iso3": "KAZ",
+        "name": "Kazakhstan"
+    },
+    {
+        "iso2": "KE",
+        "iso3": "KEN",
+        "name": "Kenya"
+    },
+    {
+        "iso2": "KG",
+        "iso3": "KGZ",
+        "name": "Kyrgyzstan"
+    },
+    {
+        "iso2": "KH",
+        "iso3": "KHM",
+        "name": "Cambodia"
+    },
+    {
+        "iso2": "KI",
+        "iso3": "KIR",
+        "name": "Kiribati"
+    },
+    {
+        "iso2": "KN",
+        "iso3": "KNA",
+        "name": "Saint Kitts and Nevis"
+    },
+    {
+        "iso2": "KR",
+        "iso3": "KOR",
+        "name": "Korea, Republic of"
+    },
+    {
+        "iso2": "KW",
+        "iso3": "KWT",
+        "name": "Kuwait"
+    },
+    {
+        "iso2": "LA",
+        "iso3": "LAO",
+        "name": "Lao People's Democratic Republic"
+    },
+    {
+        "iso2": "LB",
+        "iso3": "LBN",
+        "name": "Lebanon"
+    },
+    {
+        "iso2": "LR",
+        "iso3": "LBR",
+        "name": "Liberia"
+    },
+    {
+        "iso2": "LY",
+        "iso3": "LBY",
+        "name": "Libya"
+    },
+    {
+        "iso2": "LC",
+        "iso3": "LCA",
+        "name": "Saint Lucia"
+    },
+    {
+        "iso2": "LI",
+        "iso3": "LIE",
+        "name": "Liechtenstein"
+    },
+    {
+        "iso2": "LK",
+        "iso3": "LKA",
+        "name": "Sri Lanka"
+    },
+    {
+        "iso2": "LS",
+        "iso3": "LSO",
+        "name": "Lesotho"
+    },
+    {
+        "iso2": "LT",
+        "iso3": "LTU",
+        "name": "Lithuania"
+    },
+    {
+        "iso2": "LU",
+        "iso3": "LUX",
+        "name": "Luxembourg"
+    },
+    {
+        "iso2": "LV",
+        "iso3": "LVA",
+        "name": "Latvia"
+    },
+    {
+        "iso2": "MO",
+        "iso3": "MAC",
+        "name": "Macao"
+    },
+    {
+        "iso2": "MF",
+        "iso3": "MAF",
+        "name": "Saint Martin (French part)"
+    },
+    {
+        "iso2": "MA",
+        "iso3": "MAR",
+        "name": "Morocco"
+    },
+    {
+        "iso2": "MC",
+        "iso3": "MCO",
+        "name": "Monaco"
+    },
+    {
+        "iso2": "MD",
+        "iso3": "MDA",
+        "name": "Moldova, Republic of"
+    },
+    {
+        "iso2": "MG",
+        "iso3": "MDG",
+        "name": "Madagascar"
+    },
+    {
+        "iso2": "MV",
+        "iso3": "MDV",
+        "name": "Maldives"
+    },
+    {
+        "iso2": "MX",
+        "iso3": "MEX",
+        "name": "Mexico"
+    },
+    {
+        "iso2": "MH",
+        "iso3": "MHL",
+        "name": "Marshall Islands"
+    },
+    {
+        "iso2": "MK",
+        "iso3": "MKD",
+        "name": "North Macedonia"
+    },
+    {
+        "iso2": "ML",
+        "iso3": "MLI",
+        "name": "Mali"
+    },
+    {
+        "iso2": "MT",
+        "iso3": "MLT",
+        "name": "Malta"
+    },
+    {
+        "iso2": "MM",
+        "iso3": "MMR",
+        "name": "Myanmar"
+    },
+    {
+        "iso2": "ME",
+        "iso3": "MNE",
+        "name": "Montenegro"
+    },
+    {
+        "iso2": "MN",
+        "iso3": "MNG",
+        "name": "Mongolia"
+    },
+    {
+        "iso2": "MP",
+        "iso3": "MNP",
+        "name": "Northern Mariana Islands"
+    },
+    {
+        "iso2": "MZ",
+        "iso3": "MOZ",
+        "name": "Mozambique"
+    },
+    {
+        "iso2": "MR",
+        "iso3": "MRT",
+        "name": "Mauritania"
+    },
+    {
+        "iso2": "MS",
+        "iso3": "MSR",
+        "name": "Montserrat"
+    },
+    {
+        "iso2": "MQ",
+        "iso3": "MTQ",
+        "name": "Martinique"
+    },
+    {
+        "iso2": "MU",
+        "iso3": "MUS",
+        "name": "Mauritius"
+    },
+    {
+        "iso2": "MW",
+        "iso3": "MWI",
+        "name": "Malawi"
+    },
+    {
+        "iso2": "MY",
+        "iso3": "MYS",
+        "name": "Malaysia"
+    },
+    {
+        "iso2": "YT",
+        "iso3": "MYT",
+        "name": "Mayotte"
+    },
+    {
+        "iso2": "NA",
+        "iso3": "NAM",
+        "name": "Namibia"
+    },
+    {
+        "iso2": "NC",
+        "iso3": "NCL",
+        "name": "New Caledonia"
+    },
+    {
+        "iso2": "NE",
+        "iso3": "NER",
+        "name": "Niger"
+    },
+    {
+        "iso2": "NF",
+        "iso3": "NFK",
+        "name": "Norfolk Island"
+    },
+    {
+        "iso2": "NG",
+        "iso3": "NGA",
+        "name": "Nigeria"
+    },
+    {
+        "iso2": "NI",
+        "iso3": "NIC",
+        "name": "Nicaragua"
+    },
+    {
+        "iso2": "NU",
+        "iso3": "NIU",
+        "name": "Niue"
+    },
+    {
+        "iso2": "NL",
+        "iso3": "NLD",
+        "name": "Netherlands"
+    },
+    {
+        "iso2": "NO",
+        "iso3": "NOR",
+        "name": "Norway"
+    },
+    {
+        "iso2": "NP",
+        "iso3": "NPL",
+        "name": "Nepal"
+    },
+    {
+        "iso2": "NR",
+        "iso3": "NRU",
+        "name": "Nauru"
+    },
+    {
+        "iso2": "NZ",
+        "iso3": "NZL",
+        "name": "New Zealand"
+    },
+    {
+        "iso2": "OM",
+        "iso3": "OMN",
+        "name": "Oman"
+    },
+    {
+        "iso2": "PK",
+        "iso3": "PAK",
+        "name": "Pakistan"
+    },
+    {
+        "iso2": "PA",
+        "iso3": "PAN",
+        "name": "Panama"
+    },
+    {
+        "iso2": "PN",
+        "iso3": "PCN",
+        "name": "Pitcairn"
+    },
+    {
+        "iso2": "PE",
+        "iso3": "PER",
+        "name": "Peru"
+    },
+    {
+        "iso2": "PH",
+        "iso3": "PHL",
+        "name": "Philippines"
+    },
+    {
+        "iso2": "PW",
+        "iso3": "PLW",
+        "name": "Palau"
+    },
+    {
+        "iso2": "PG",
+        "iso3": "PNG",
+        "name": "Papua New Guinea"
+    },
+    {
+        "iso2": "PL",
+        "iso3": "POL",
+        "name": "Poland"
+    },
+    {
+        "iso2": "PR",
+        "iso3": "PRI",
+        "name": "Puerto Rico"
+    },
+    {
+        "iso2": "KP",
+        "iso3": "PRK",
+        "name": "Korea, Democratic People's Republic of"
+    },
+    {
+        "iso2": "PT",
+        "iso3": "PRT",
+        "name": "Portugal"
+    },
+    {
+        "iso2": "PY",
+        "iso3": "PRY",
+        "name": "Paraguay"
+    },
+    {
+        "iso2": "PS",
+        "iso3": "PSE",
+        "name": "Palestine, State of"
+    },
+    {
+        "iso2": "PF",
+        "iso3": "PYF",
+        "name": "French Polynesia"
+    },
+    {
+        "iso2": "QA",
+        "iso3": "QAT",
+        "name": "Qatar"
+    },
+    {
+        "iso2": "RE",
+        "iso3": "REU",
+        "name": "Réunion"
+    },
+    {
+        "iso2": "RO",
+        "iso3": "ROU",
+        "name": "Romania"
+    },
+    {
+        "iso2": "RU",
+        "iso3": "RUS",
+        "name": "Russian Federation"
+    },
+    {
+        "iso2": "RW",
+        "iso3": "RWA",
+        "name": "Rwanda"
+    },
+    {
+        "iso2": "SA",
+        "iso3": "SAU",
+        "name": "Saudi Arabia"
+    },
+    {
+        "iso2": "SD",
+        "iso3": "SDN",
+        "name": "Sudan"
+    },
+    {
+        "iso2": "SN",
+        "iso3": "SEN",
+        "name": "Senegal"
+    },
+    {
+        "iso2": "SG",
+        "iso3": "SGP",
+        "name": "Singapore"
+    },
+    {
+        "iso2": "GS",
+        "iso3": "SGS",
+        "name": "South Georgia and the South Sandwich Islands"
+    },
+    {
+        "iso2": "SH",
+        "iso3": "SHN",
+        "name": "Saint Helena, Ascension and Tristan da Cunha"
+    },
+    {
+        "iso2": "SJ",
+        "iso3": "SJM",
+        "name": "Svalbard and Jan Mayen"
+    },
+    {
+        "iso2": "SB",
+        "iso3": "SLB",
+        "name": "Solomon Islands"
+    },
+    {
+        "iso2": "SL",
+        "iso3": "SLE",
+        "name": "Sierra Leone"
+    },
+    {
+        "iso2": "SV",
+        "iso3": "SLV",
+        "name": "El Salvador"
+    },
+    {
+        "iso2": "SM",
+        "iso3": "SMR",
+        "name": "San Marino"
+    },
+    {
+        "iso2": "SO",
+        "iso3": "SOM",
+        "name": "Somalia"
+    },
+    {
+        "iso2": "PM",
+        "iso3": "SPM",
+        "name": "Saint Pierre and Miquelon"
+    },
+    {
+        "iso2": "RS",
+        "iso3": "SRB",
+        "name": "Serbia"
+    },
+    {
+        "iso2": "SS",
+        "iso3": "SSD",
+        "name": "South Sudan"
+    },
+    {
+        "iso2": "ST",
+        "iso3": "STP",
+        "name": "Sao Tome and Principe"
+    },
+    {
+        "iso2": "SR",
+        "iso3": "SUR",
+        "name": "Suriname"
+    },
+    {
+        "iso2": "SK",
+        "iso3": "SVK",
+        "name": "Slovakia"
+    },
+    {
+        "iso2": "SI",
+        "iso3": "SVN",
+        "name": "Slovenia"
+    },
+    {
+        "iso2": "SE",
+        "iso3": "SWE",
+        "name": "Sweden"
+    },
+    {
+        "iso2": "SZ",
+        "iso3": "SWZ",
+        "name": "Eswatini"
+    },
+    {
+        "iso2": "SX",
+        "iso3": "SXM",
+        "name": "Sint Maarten (Dutch part)"
+    },
+    {
+        "iso2": "SC",
+        "iso3": "SYC",
+        "name": "Seychelles"
+    },
+    {
+        "iso2": "SY",
+        "iso3": "SYR",
+        "name": "Syrian Arab Republic"
+    },
+    {
+        "iso2": "TC",
+        "iso3": "TCA",
+        "name": "Turks and Caicos Islands"
+    },
+    {
+        "iso2": "TD",
+        "iso3": "TCD",
+        "name": "Chad"
+    },
+    {
+        "iso2": "TG",
+        "iso3": "TGO",
+        "name": "Togo"
+    },
+    {
+        "iso2": "TH",
+        "iso3": "THA",
+        "name": "Thailand"
+    },
+    {
+        "iso2": "TJ",
+        "iso3": "TJK",
+        "name": "Tajikistan"
+    },
+    {
+        "iso2": "TK",
+        "iso3": "TKL",
+        "name": "Tokelau"
+    },
+    {
+        "iso2": "TM",
+        "iso3": "TKM",
+        "name": "Turkmenistan"
+    },
+    {
+        "iso2": "TL",
+        "iso3": "TLS",
+        "name": "Timor-Leste"
+    },
+    {
+        "iso2": "TO",
+        "iso3": "TON",
+        "name": "Tonga"
+    },
+    {
+        "iso2": "TT",
+        "iso3": "TTO",
+        "name": "Trinidad and Tobago"
+    },
+    {
+        "iso2": "TN",
+        "iso3": "TUN",
+        "name": "Tunisia"
+    },
+    {
+        "iso2": "TR",
+        "iso3": "TUR",
+        "name": "Türkiye"
+    },
+    {
+        "iso2": "TV",
+        "iso3": "TUV",
+        "name": "Tuvalu"
+    },
+    {
+        "iso2": "TW",
+        "iso3": "TWN",
+        "name": "Taiwan, Province of China"
+    },
+    {
+        "iso2": "TZ",
+        "iso3": "TZA",
+        "name": "Tanzania, United Republic of"
+    },
+    {
+        "iso2": "UG",
+        "iso3": "UGA",
+        "name": "Uganda"
+    },
+    {
+        "iso2": "UA",
+        "iso3": "UKR",
+        "name": "Ukraine"
+    },
+    {
+        "iso2": "UM",
+        "iso3": "UMI",
+        "name": "United States Minor Outlying Islands"
+    },
+    {
+        "iso2": "UY",
+        "iso3": "URY",
+        "name": "Uruguay"
+    },
+    {
+        "iso2": "US",
+        "iso3": "USA",
+        "name": "United States"
+    },
+    {
+        "iso2": "UZ",
+        "iso3": "UZB",
+        "name": "Uzbekistan"
+    },
+    {
+        "iso2": "VA",
+        "iso3": "VAT",
+        "name": "Holy See (Vatican City State)"
+    },
+    {
+        "iso2": "VC",
+        "iso3": "VCT",
+        "name": "Saint Vincent and the Grenadines"
+    },
+    {
+        "iso2": "VE",
+        "iso3": "VEN",
+        "name": "Venezuela, Bolivarian Republic of"
+    },
+    {
+        "iso2": "VG",
+        "iso3": "VGB",
+        "name": "Virgin Islands, British"
+    },
+    {
+        "iso2": "VI",
+        "iso3": "VIR",
+        "name": "Virgin Islands, U.S."
+    },
+    {
+        "iso2": "VN",
+        "iso3": "VNM",
+        "name": "Viet Nam"
+    },
+    {
+        "iso2": "VU",
+        "iso3": "VUT",
+        "name": "Vanuatu"
+    },
+    {
+        "iso2": "WF",
+        "iso3": "WLF",
+        "name": "Wallis and Futuna"
+    },
+    {
+        "iso2": "WS",
+        "iso3": "WSM",
+        "name": "Samoa"
+    },
+    {
+        "iso2": "YE",
+        "iso3": "YEM",
+        "name": "Yemen"
+    },
+    {
+        "iso2": "ZA",
+        "iso3": "ZAF",
+        "name": "South Africa"
+    },
+    {
+        "iso2": "ZM",
+        "iso3": "ZMB",
+        "name": "Zambia"
+    },
+    {
+        "iso2": "ZW",
+        "iso3": "ZWE",
+        "name": "Zimbabwe"
+    }
+];
+
+    const rowsEl = document.getElementById("rows");
+    const searchInput = document.getElementById("searchInput");
+    const totalText = document.getElementById("totalText");
+    const countFree = document.getElementById("countFree");
+    const countArrival = document.getElementById("countArrival");
+    const countEvisa = document.getElementById("countEvisa");
+    const countRegular = document.getElementById("countRegular");
+    const flagsFree = document.getElementById("flagsFree");
+    const flagsArrival = document.getElementById("flagsArrival");
+    const flagsEvisa = document.getElementById("flagsEvisa");
+    const flagsRegular = document.getElementById("flagsRegular");
+    const statFree = document.getElementById("statFree");
+    const statArrival = document.getElementById("statArrival");
+    const statEvisa = document.getElementById("statEvisa");
+    const statRegular = document.getElementById("statRegular");
+    const worldMapEl = document.getElementById("worldMap");
+    const mapTooltipEl = document.getElementById("mapTooltip");
+    const tableTooltipEl = document.getElementById("tableTooltip");
+    const countryPanelEl = document.getElementById("countryPanel");
+    const countryPanelBodyEl = document.getElementById("countryPanelBody");
+    const countryPanelCloseEl = document.getElementById("countryPanelClose");
+    const themeToggle = document.getElementById("themeToggle");
+    const difficultyModeToggle = document.getElementById("difficultyModeToggle");
+    const legendType = document.getElementById("legendType");
+    const legendDifficulty = document.getElementById("legendDifficulty");
+    const sortCountry = document.getElementById("sortCountry");
+    const sortType = document.getElementById("sortType");
+
+    let allRows = [];
+    let mapRenderTimer = null;
+    let mapGeoScale = 1;
+    let selectedTypes = new Set();
+    let lastMapFilterKey = "__ALL__";
+    let sortKey = "country";
+    const THEME_KEY = "china_visa_theme";
+    let mapColorMode = "type";
+    let mapForcedNoDataTraceIdx = 5;
+    let mapForcedDataTraceIdx = 6;
+    let mapHoverFillTraceIdx = 7;
+    let mapHoverPointTraceIdx = 8;
+
+    function closeCountryPanel() {
+      if (!countryPanelEl) return;
+      countryPanelEl.classList.remove("is-open");
+      countryPanelEl.setAttribute("aria-hidden", "true");
+    }
+
+    applyTheme(loadTheme());
+    if (countryPanelCloseEl && countryPanelEl) {
+      countryPanelCloseEl.addEventListener("click", closeCountryPanel);
+    }
+    document.addEventListener("pointerdown", (evt) => {
+      if (!countryPanelEl || !countryPanelEl.classList.contains("is-open")) return;
+      if (countryPanelEl.contains(evt.target)) return;
+      closeCountryPanel();
+    });
+
+    searchInput.addEventListener("input", render);
+    const TYPE_SORT_ORDER = { "免签": 0, "落地签": 1, "电子签": 2, "常规签": 3 };
+    const applySort = (rows) => {
+      if (sortKey === "type") {
+        rows.sort((a, b) => {
+          const t = (TYPE_SORT_ORDER[a.type] ?? 99) - (TYPE_SORT_ORDER[b.type] ?? 99);
+          if (t !== 0) return t;
+          return a.country.localeCompare(b.country);
+        });
+        return;
+      }
+      rows.sort((a, b) => a.country.localeCompare(b.country));
+    };
+    if (sortCountry) {
+      sortCountry.classList.add("sortable");
+      sortCountry.title = "按国家名称排序";
+      sortCountry.addEventListener("click", () => {
+        sortKey = "country";
+        render();
+      });
+    }
+    if (sortType) {
+      sortType.classList.add("sortable");
+      sortType.title = "按分类排序（免签→落地签→电子签→常规签）";
+      sortType.addEventListener("click", () => {
+        sortKey = "type";
+        render();
+      });
+    }
+    [
+      { el: statFree, type: "免签" },
+      { el: statArrival, type: "落地签" },
+      { el: statEvisa, type: "电子签" },
+      { el: statRegular, type: "常规签" }
+    ].forEach(({ el, type }) => {
+      el.addEventListener("click", () => {
+        if (selectedTypes.has(type)) {
+          selectedTypes.delete(type);
+        } else {
+          selectedTypes.add(type);
+        }
+        render();
+      });
+    });
+    themeToggle.addEventListener("click", () => {
+      const next = document.body.classList.contains("dark") ? "light" : "dark";
+      applyTheme(next);
+      localStorage.setItem(THEME_KEY, next);
+      scheduleMapRender(getMapRowsForCurrentFilter());
+    });
+    difficultyModeToggle.addEventListener("click", () => {
+      mapColorMode = mapColorMode === "difficulty" ? "type" : "difficulty";
+      legendType.style.display = mapColorMode === "type" ? "inline-flex" : "none";
+      legendDifficulty.style.display = mapColorMode === "difficulty" ? "inline-flex" : "none";
+      difficultyModeToggle.textContent = mapColorMode === "difficulty" ? "按签证方式着色" : "按签证容易度着色";
+      scheduleMapRender(getMapRowsForCurrentFilter());
+    });
+
+    function norm(str) {
+      return String(str || "").replace(/\s+/g, " ").trim();
+    }
+
+    function loadTheme() {
+      try {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved === "light" || saved === "dark") return saved;
+      } catch (_) {}
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+
+    function applyTheme(theme) {
+      const dark = theme === "dark";
+      document.body.classList.toggle("dark", dark);
+      if (themeToggle) {
+        themeToggle.textContent = "☀";
+        themeToggle.setAttribute("aria-label", dark ? "切换到日间模式" : "切换到夜间模式");
+        themeToggle.setAttribute("title", dark ? "切换到日间模式" : "切换到夜间模式");
+      }
+    }
+
+    function stripRefs(str) {
+      return norm(str).replace(/\[\d+\]/g, "").replace(/\s{2,}/g, " ").trim();
+    }
+
+    function getTagClass(type) {
+      if (type === "免签") return "tag-free";
+      if (type === "落地签") return "tag-arrival";
+      if (type === "电子签") return "tag-evisa";
+      return "tag-regular";
+    }
+
+    function getChipClass(type) {
+      if (type === "免签") return "chip-free";
+      if (type === "落地签") return "chip-arrival";
+      if (type === "电子签") return "chip-evisa";
+      return "chip-regular";
+    }
+
+    const SCHENGEN_ISO3 = new Set([
+      "AUT","BEL","CZE","DNK","EST","FIN","FRA","DEU","GRC","HUN","ISL","ITA","LVA","LIE",
+      "LTU","LUX","MLT","NLD","NOR","POL","PRT","SVK","SVN","ESP","SWE","CHE","HRV"
+    ]);
+    const VISA_DIFFICULTY_META = {
+      1: { text: "非常简易", className: "ease-1" },
+      2: { text: "较为简易", className: "ease-2" },
+      3: { text: "常规", className: "ease-3" },
+      4: { text: "较困难", className: "ease-4" },
+      5: { text: "非常困难", className: "ease-5" }
+    };
+    const USER_DIFFICULTY_LIST = [
+      { country: "Afghanistan", difficulty: 5 }, { country: "Albania", difficulty: 1 }, { country: "Algeria", difficulty: 5 },
+      { country: "Andorra", difficulty: 3 }, { country: "Angola", difficulty: 2 }, { country: "Antigua and Barbuda", difficulty: 1 },
+      { country: "Argentina", difficulty: 2 }, { country: "Armenia", difficulty: 1 }, { country: "Australia", difficulty: 4 },
+      { country: "Austria", difficulty: 3 }, { country: "Azerbaijan", difficulty: 2 }, { country: "Bahamas", difficulty: 1 },
+      { country: "Bahrain", difficulty: 2 }, { country: "Bangladesh", difficulty: 2 }, { country: "Barbados", difficulty: 1 },
+      { country: "Belarus", difficulty: 1 }, { country: "Belgium", difficulty: 3 }, { country: "Belize", difficulty: 1 },
+      { country: "Benin", difficulty: 2 }, { country: "Bhutan", difficulty: 5 }, { country: "Bolivia", difficulty: 2 },
+      { country: "Bosnia and Herzegovina", difficulty: 1 }, { country: "Botswana", difficulty: 2 }, { country: "Brazil", difficulty: 2 },
+      { country: "Brunei", difficulty: 1 }, { country: "Bulgaria", difficulty: 3 }, { country: "Burkina Faso", difficulty: 2 },
+      { country: "Burundi", difficulty: 2 }, { country: "Cabo Verde", difficulty: 2 }, { country: "Cambodia", difficulty: 1 },
+      { country: "Cameroon", difficulty: 2 }, { country: "Canada", difficulty: 4 }, { country: "Central African Republic", difficulty: 5 },
+      { country: "Chad", difficulty: 5 }, { country: "Chile", difficulty: 2 }, { country: "China", difficulty: 1 },
+      { country: "Colombia", difficulty: 2 }, { country: "Comoros", difficulty: 1 }, { country: "Congo (Brazzaville)", difficulty: 2 },
+      { country: "Congo (Kinshasa)", difficulty: 2 }, { country: "Costa Rica", difficulty: 2 }, { country: "Croatia", difficulty: 3 },
+      { country: "Cuba", difficulty: 2 }, { country: "Cyprus", difficulty: 3 }, { country: "Czechia", difficulty: 3 },
+      { country: "Denmark", difficulty: 3 }, { country: "Djibouti", difficulty: 2 }, { country: "Dominica", difficulty: 1 },
+      { country: "Dominican Republic", difficulty: 2 }, { country: "Ecuador", difficulty: 2 }, { country: "Egypt", difficulty: 2 },
+      { country: "El Salvador", difficulty: 2 }, { country: "Equatorial Guinea", difficulty: 5 }, { country: "Eritrea", difficulty: 5 },
+      { country: "Estonia", difficulty: 3 }, { country: "Eswatini", difficulty: 2 }, { country: "Ethiopia", difficulty: 2 },
+      { country: "Fiji", difficulty: 1 }, { country: "Finland", difficulty: 3 }, { country: "France", difficulty: 3 },
+      { country: "Gabon", difficulty: 2 }, { country: "Gambia", difficulty: 1 }, { country: "Georgia", difficulty: 1 },
+      { country: "Germany", difficulty: 3 }, { country: "Ghana", difficulty: 2 }, { country: "Greece", difficulty: 3 },
+      { country: "Grenada", difficulty: 1 }, { country: "Guatemala", difficulty: 2 }, { country: "Guinea", difficulty: 2 },
+      { country: "Guinea-Bissau", difficulty: 2 }, { country: "Guyana", difficulty: 2 }, { country: "Haiti", difficulty: 2 },
+      { country: "Honduras", difficulty: 2 }, { country: "Hungary", difficulty: 3 }, { country: "Iceland", difficulty: 3 },
+      { country: "India", difficulty: 5 }, { country: "Indonesia", difficulty: 1 }, { country: "Iran", difficulty: 4 },
+      { country: "Iraq", difficulty: 5 }, { country: "Ireland", difficulty: 4 }, { country: "Israel", difficulty: 4 },
+      { country: "Italy", difficulty: 3 }, { country: "Jamaica", difficulty: 1 }, { country: "Japan", difficulty: 2 },
+      { country: "Jordan", difficulty: 2 }, { country: "Kazakhstan", difficulty: 1 }, { country: "Kenya", difficulty: 2 },
+      { country: "Kiribati", difficulty: 1 }, { country: "Kuwait", difficulty: 4 }, { country: "Kyrgyzstan", difficulty: 1 },
+      { country: "Laos", difficulty: 1 }, { country: "Latvia", difficulty: 3 }, { country: "Lebanon", difficulty: 3 },
+      { country: "Lesotho", difficulty: 2 }, { country: "Liberia", difficulty: 2 }, { country: "Libya", difficulty: 5 },
+      { country: "Liechtenstein", difficulty: 3 }, { country: "Lithuania", difficulty: 3 }, { country: "Luxembourg", difficulty: 3 },
+      { country: "Madagascar", difficulty: 1 }, { country: "Malawi", difficulty: 2 }, { country: "Malaysia", difficulty: 1 },
+      { country: "Maldives", difficulty: 1 }, { country: "Mali", difficulty: 5 }, { country: "Malta", difficulty: 3 },
+      { country: "Marshall Islands", difficulty: 1 }, { country: "Mauritania", difficulty: 2 }, { country: "Mauritius", difficulty: 1 },
+      { country: "Mexico", difficulty: 2 }, { country: "Micronesia", difficulty: 1 }, { country: "Moldova", difficulty: 2 },
+      { country: "Monaco", difficulty: 3 }, { country: "Mongolia", difficulty: 2 }, { country: "Montenegro", difficulty: 1 },
+      { country: "Morocco", difficulty: 1 }, { country: "Mozambique", difficulty: 2 }, { country: "Myanmar", difficulty: 2 },
+      { country: "Namibia", difficulty: 2 }, { country: "Nauru", difficulty: 1 }, { country: "Nepal", difficulty: 1 },
+      { country: "Netherlands", difficulty: 3 }, { country: "New Zealand", difficulty: 3 }, { country: "Nicaragua", difficulty: 2 },
+      { country: "Niger", difficulty: 5 }, { country: "Nigeria", difficulty: 2 }, { country: "North Korea", difficulty: 5 },
+      { country: "North Macedonia", difficulty: 1 }, { country: "Norway", difficulty: 3 }, { country: "Oman", difficulty: 2 },
+      { country: "Pakistan", difficulty: 3 }, { country: "Palau", difficulty: 1 }, { country: "Panama", difficulty: 2 },
+      { country: "Papua New Guinea", difficulty: 2 }, { country: "Paraguay", difficulty: 2 }, { country: "Peru", difficulty: 2 },
+      { country: "Philippines", difficulty: 1 }, { country: "Poland", difficulty: 3 }, { country: "Portugal", difficulty: 3 },
+      { country: "Qatar", difficulty: 1 }, { country: "Romania", difficulty: 3 }, { country: "Russia", difficulty: 3 },
+      { country: "Rwanda", difficulty: 1 }, { country: "Saint Kitts and Nevis", difficulty: 1 }, { country: "Saint Lucia", difficulty: 1 },
+      { country: "Saint Vincent and the Grenadines", difficulty: 1 }, { country: "Samoa", difficulty: 1 },
+      { country: "San Marino", difficulty: 3 }, { country: "Sao Tome and Principe", difficulty: 1 },
+      { country: "Saudi Arabia", difficulty: 2 }, { country: "Senegal", difficulty: 1 }, { country: "Serbia", difficulty: 1 },
+      { country: "Seychelles", difficulty: 1 }, { country: "Sierra Leone", difficulty: 2 }, { country: "Singapore", difficulty: 1 },
+      { country: "Slovakia", difficulty: 3 }, { country: "Slovenia", difficulty: 3 }, { country: "Solomon Islands", difficulty: 1 },
+      { country: "Somalia", difficulty: 5 }, { country: "South Africa", difficulty: 2 }, { country: "South Korea", difficulty: 2 },
+      { country: "South Sudan", difficulty: 5 }, { country: "Spain", difficulty: 3 }, { country: "Sri Lanka", difficulty: 2 },
+      { country: "Sudan", difficulty: 5 }, { country: "Suriname", difficulty: 2 }, { country: "Sweden", difficulty: 3 },
+      { country: "Switzerland", difficulty: 3 }, { country: "Syria", difficulty: 5 }, { country: "Tajikistan", difficulty: 2 },
+      { country: "Tanzania", difficulty: 2 }, { country: "Thailand", difficulty: 1 }, { country: "Timor-Leste", difficulty: 1 },
+      { country: "Togo", difficulty: 2 }, { country: "Tonga", difficulty: 1 }, { country: "Trinidad and Tobago", difficulty: 1 },
+      { country: "Tunisia", difficulty: 1 }, { country: "Turkey", difficulty: 1 }, { country: "Turkmenistan", difficulty: 5 },
+      { country: "Tuvalu", difficulty: 1 }, { country: "Uganda", difficulty: 2 }, { country: "Ukraine", difficulty: 3 },
+      { country: "United Arab Emirates", difficulty: 1 }, { country: "United Kingdom", difficulty: 4 },
+      { country: "United States", difficulty: 4 }, { country: "Uruguay", difficulty: 2 }, { country: "Uzbekistan", difficulty: 1 },
+      { country: "Vanuatu", difficulty: 1 }, { country: "Vatican City", difficulty: 3 }, { country: "Venezuela", difficulty: 2 },
+      { country: "Vietnam", difficulty: 1 }, { country: "Yemen", difficulty: 5 }, { country: "Zambia", difficulty: 1 },
+      { country: "Zimbabwe", difficulty: 2 }
+    ];
+    const USER_DIFFICULTY_BY_COUNTRY = new Map(USER_DIFFICULTY_LIST.map((x) => [x.country.toLowerCase(), x.difficulty]));
+    const COUNTRY_NAME_ALIASES = {
+      "korea, democratic people's republic of": "north korea",
+      "korea, republic of": "south korea",
+      "brunei darussalam": "brunei",
+      "russian federation": "russia",
+      "viet nam": "vietnam",
+      "lao people's democratic republic": "laos",
+      "moldova, republic of": "moldova",
+      "micronesia, federated states of": "micronesia",
+      "tanzania, united republic of": "tanzania",
+      "iran, islamic republic of": "iran",
+      "venezuela, bolivarian republic of": "venezuela",
+      "congo": "congo (brazzaville)",
+      "congo, the democratic republic of the": "congo (kinshasa)",
+      "holy see (vatican city state)": "vatican city",
+      "timor-leste": "timor-leste",
+      "czech republic": "czechia",
+      "syrian arab republic": "syria"
+    };
+    const POPULAR_VISA_LINKS_BY_ISO3 = {
+      JPN: "https://www.evisa.mofa.go.jp/",
+      KOR: "https://www.visa.go.kr/",
+      THA: "https://www.thaievisa.go.th/",
+      VNM: "https://evisa.gov.vn/",
+      IND: "https://indianvisaonline.gov.in/evisa/",
+      TUR: "https://www.evisa.gov.tr/",
+      RUS: "https://evisa.kdmid.ru/",
+      AUS: "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/visitor-600",
+      NZL: "https://www.immigration.govt.nz/new-zealand-visas/visas/visa/visitor-visa/",
+      USA: "https://ceac.state.gov/genniv/",
+      CAN: "https://www.canada.ca/en/immigration-refugees-citizenship/services/visit-canada/visitor-visa.html",
+      GBR: "https://www.gov.uk/standard-visitor/apply-standard-visitor-visa",
+      FRA: "https://france-visas.gouv.fr/",
+      DEU: "https://videx.diplo.de/",
+      ITA: "https://visa.vfsglobal.com/chn/zh/ita",
+      ESP: "https://china.blsspainvisa.com/",
+      SGP: "https://eservices.ica.gov.sg/esvclandingpage/save",
+      ARE: "https://smartservices.icp.gov.ae/echannels/web/client/default.html#/login",
+      SAU: "https://visa.visitsaudi.com/",
+      EGY: "https://visa2egypt.gov.eg/",
+      IDN: "https://evisa.imigrasi.go.id/",
+      MYS: "https://malaysiavisa.imi.gov.my/evisa/evisa.jsp",
+      QAT: "https://visitqatar.com/in-en/plan-your-trip/visas",
+      ZAF: "https://ehome.dha.gov.za/epermit/home",
+      BRA: "https://www.gov.br/mre/pt-br/consulado-xangai/servicos-consulares/vistos-1",
+      ARG: "https://cancilleria.gob.ar/en/services/visas"
+    };
+
+    function getVisaDifficulty(type, iso3, rawRequirement, note, countryEn) {
+      const t = norm(type);
+      if (t === "免签" || t === "落地签") return 1;
+      if (t !== "电子签" && t !== "常规签") return null;
+
+      const en = norm(countryEn).toLowerCase();
+      const alias = COUNTRY_NAME_ALIASES[en] || en;
+      if (USER_DIFFICULTY_BY_COUNTRY.has(alias)) return USER_DIFFICULTY_BY_COUNTRY.get(alias);
+
+      const code = norm(iso3).toUpperCase();
+      if (SCHENGEN_ISO3.has(code)) return 3;
+      return t === "电子签" ? 2 : 3;
+    }
+
+    function getDifficultyMeterHtml(level) {
+      const n = Number(level || 0);
+      if (!n || n < 1 || n > 5) return "";
+      let html = "<span class='diff-meter' aria-label='签证难度 " + n + " / 5'>";
+      for (let i = 1; i <= 5; i += 1) {
+        const active = i <= n ? "on-" + n : "";
+        html += "<span class='diff-mark " + active + "'>!</span>";
+      }
+      html += "</span>";
+      return html;
+    }
+
+    function getEaseDisplayHtml(type, level) {
+      const t = norm(type);
+      if (t === "免签" || t === "落地签") {
+        return getDifficultyMeterHtml(1) + "<span class='ease-text ease-1'>非常容易（" + escapeHtml(t) + "）</span>";
+      }
+      const n = Number(level || 0);
+      const meta = VISA_DIFFICULTY_META[n];
+      if (!meta) return "";
+      return getDifficultyMeterHtml(n) + "<span class='ease-text " + meta.className + "'>" + meta.text + "</span>";
+    }
+
+    function getDifficultyMeterPlain(level) {
+      const n = Number(level || 0);
+      if (!n || n < 1 || n > 5) return "";
+      return "!".repeat(n) + "·".repeat(5 - n);
+    }
+
+    function render() {
+      allRows = STATIC_VISA_DATA
+        .map((r) => ({
+          country: norm(r.country),
+          country_en: norm(r.country_en),
+          iso3: norm(r.iso3),
+          type: ["免签", "落地签", "电子签", "常规签"].includes(r.type) ? r.type : "常规签",
+          rawRequirement: stripRefs(r.rawRequirement),
+          stay: stripRefs(r.stay),
+          note: stripRefs(r.note),
+          difficulty: getVisaDifficulty(r.type, r.iso3, r.rawRequirement, r.note, r.country_en)
+        }))
+        .filter((r) => r.country)
+        .sort((a, b) => a.country.localeCompare(b.country));
+
+      const keyword = searchInput.value.trim().toLowerCase();
+      const typeMatches = (r) => selectedTypes.size === 0 || selectedTypes.has(r.type);
+
+      const shown = allRows.filter((r) => {
+        const typeOk = typeMatches(r);
+        const text = r.country.toLowerCase();
+        const textOk = !keyword || text.includes(keyword);
+        return typeOk && textOk;
+      });
+      applySort(shown);
+
+      const counts = {
+        "免签": 0,
+        "落地签": 0,
+        "电子签": 0,
+        "常规签": 0
+      };
+      allRows.forEach((r) => { counts[r.type] += 1; });
+
+      countFree.textContent = counts["免签"];
+      countArrival.textContent = counts["落地签"];
+      countEvisa.textContent = counts["电子签"];
+      countRegular.textContent = counts["常规签"];
+      if (flagsFree) flagsFree.textContent = "";
+      if (flagsArrival) flagsArrival.textContent = "";
+      if (flagsEvisa) flagsEvisa.textContent = "";
+      if (flagsRegular) flagsRegular.textContent = "";
+      const hasFilter = selectedTypes.size > 0 || Boolean(keyword);
+      totalText.textContent = "共 " + shown.length + " 条" + (hasFilter ? "（筛选后）" : "");
+
+      const totalForRatio = Math.max(1, allRows.length);
+      const setStatFlex = (el, n) => {
+        // Keep minimum visibility while still reflecting ratio.
+        const ratio = n / totalForRatio;
+        const weight = Math.max(0.55, ratio * 10);
+        el.style.flex = weight.toFixed(3) + " 1 0";
+      };
+      setStatFlex(statFree, counts["免签"]);
+      setStatFlex(statArrival, counts["落地签"]);
+      setStatFlex(statEvisa, counts["电子签"]);
+      setStatFlex(statRegular, counts["常规签"]);
+      statFree.classList.toggle("is-selected", selectedTypes.has("免签"));
+      statArrival.classList.toggle("is-selected", selectedTypes.has("落地签"));
+      statEvisa.classList.toggle("is-selected", selectedTypes.has("电子签"));
+      statRegular.classList.toggle("is-selected", selectedTypes.has("常规签"));
+
+      rowsEl.innerHTML = "";
+      if (!shown.length) {
+        rowsEl.innerHTML = '<tr><td colspan="3">没有匹配结果。</td></tr>';
+        return;
+      }
+
+      shown.forEach((r) => {
+        const tr = document.createElement("tr");
+        const infoText = r.note || "无";
+        const countryLabel = getFlagEmoji(r.iso3) + " " + r.country;
+        tr.innerHTML = [
+          '<td class="col-country"><span class="ellipsis">' + escapeHtml(countryLabel) + "</span></td>",
+          '<td class="col-type"><span class="tag ' + getTagClass(r.type) + '">' + r.type + "</span></td>",
+          '<td><span class="ellipsis">' + escapeHtml(infoText) + "</span></td>"
+        ].join("");
+        tr.addEventListener("mouseenter", (evt) => {
+          if (!tableTooltipEl) return;
+          tableTooltipEl.innerHTML = buildTooltipHtmlFromRecord(r);
+          tableTooltipEl.style.display = "block";
+          placeFixedTooltip(tableTooltipEl, evt);
+        });
+        tr.addEventListener("mousemove", (evt) => {
+          if (!tableTooltipEl || tableTooltipEl.style.display === "none") return;
+          placeFixedTooltip(tableTooltipEl, evt);
+        });
+        tr.addEventListener("mouseleave", () => {
+          if (tableTooltipEl) tableTooltipEl.style.display = "none";
+        });
+        tr.addEventListener("click", () => {
+          openCountryPanel(r);
+        });
+        rowsEl.appendChild(tr);
+      });
+
+      // Performance: map updates only when type filter changes, not on each search keystroke.
+      const key = selectedTypes.size ? Array.from(selectedTypes).sort().join("|") : "__ALL__";
+      if (lastMapFilterKey !== key) {
+        lastMapFilterKey = key;
+        scheduleMapRender(getMapRowsForCurrentFilter());
+      }
+    }
+
+    function getMapRowsForCurrentFilter() {
+      if (selectedTypes.size === 0) return allRows;
+      return allRows.filter((r) => selectedTypes.has(r.type));
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function typeToValue(type) {
+      if (type === "免签") return 0;
+      if (type === "落地签") return 1;
+      if (type === "电子签") return 2;
+      return 3;
+    }
+
+    function formatHoverText(text, maxPerLine) {
+      const raw = norm(text);
+      if (!raw) return "无";
+      return escapeHtml(raw);
+    }
+
+    function getTypeBadgeHtml(type) {
+      if (type === "免签") {
+        return "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #86efac;border-radius:999px;color:#166534;background:#f0fdf4;'>免签</span>";
+      }
+      if (type === "落地签") {
+        return "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #93c5fd;border-radius:999px;color:#1e3a8a;background:#eff6ff;'>落地签</span>";
+      }
+      if (type === "电子签") {
+        return "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #fde047;border-radius:999px;color:#854d0e;background:#fefce8;'>电子签</span>";
+      }
+      return "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #d1d5db;border-radius:999px;color:#374151;background:#f9fafb;'>常规签</span>";
+    }
+
+    function getRegionDisplayName(iso2, fallbackName) {
+      const code = String(iso2 || "").toUpperCase();
+      if (code === "TW") return "中国台湾";
+      try {
+        if (typeof Intl !== "undefined" && Intl.DisplayNames) {
+          const names = new Intl.DisplayNames(["zh-CN"], { type: "region" });
+          const localized = names.of(code);
+          if (localized && localized !== code) return localized;
+        }
+      } catch (_) {
+        // Ignore and fallback to existing name.
+      }
+      return fallbackName || code;
+    }
+
+    function getFlagEmoji(iso3) {
+      const target = WORLD_COUNTRIES.find((c) => c.iso3 === iso3);
+      if (!target || !target.iso2 || target.iso2.length !== 2) return "🇺🇳";
+      const iso2 = target.iso2.toUpperCase();
+      if (!/^[A-Z]{2}$/.test(iso2)) return "🇺🇳";
+      const base = 127397;
+      return String.fromCodePoint(iso2.charCodeAt(0) + base, iso2.charCodeAt(1) + base);
+    }
+
+    function buildTooltipHtmlFromRecord(rec) {
+      const type = rec.type || "常规签";
+      const easeHtml = getEaseDisplayHtml(type, Number(rec.difficulty || 0));
+      const diffHtml = easeHtml
+        ? "<div class='map-tooltip-label'>签证容易度</div><div class='map-tooltip-value'>" + easeHtml + "</div>"
+        : "";
+      return (
+        "<div class='map-tooltip-title'>" + getFlagEmoji(rec.iso3) + " " + escapeHtml(rec.country || "未知") +
+        "<span class='map-tooltip-chip " + getChipClass(type) + "'>" + escapeHtml(type) + "</span></div>" +
+        diffHtml +
+        "<div class='map-tooltip-label'>签证要求</div><div class='map-tooltip-value'>" + escapeHtml(rec.rawRequirement || "无") + "</div>" +
+        "<div class='map-tooltip-label'>停留</div><div class='map-tooltip-value'>" + escapeHtml(rec.stay || "无") + "</div>" +
+        "<div class='map-tooltip-label'>备注</div><div class='map-tooltip-value'>" + escapeHtml(rec.note || "无") + "</div>"
+      );
+    }
+
+    function getVisaApplyLink(rec) {
+      const iso3 = norm(rec && rec.iso3).toUpperCase();
+      if (iso3 && POPULAR_VISA_LINKS_BY_ISO3[iso3]) return POPULAR_VISA_LINKS_BY_ISO3[iso3];
+      const text = [rec && rec.rawRequirement, rec && rec.note].filter(Boolean).join(" ");
+      const match = text.match(/https?:\/\/[^\s)]+/i);
+      return match ? match[0] : "";
+    }
+
+    function getGoogleMapsLink(rec) {
+      const countryQuery = norm((rec && (rec.country_en || rec.country)) || "");
+      if (!countryQuery) return "";
+      return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(countryQuery);
+    }
+
+    function buildPanelLinksHtml(rec) {
+      const visaUrl = getVisaApplyLink(rec);
+      const mapUrl = getGoogleMapsLink(rec);
+      const visaRowHtml = visaUrl
+        ? ("<div class='panel-link-row'><a href='" + escapeHtml(visaUrl) + "' target='_blank' rel='noopener noreferrer'>签证申请/官方页面</a></div>")
+        : "";
+      const mapLinkHtml = mapUrl
+        ? ("<a href='" + escapeHtml(mapUrl) + "' target='_blank' rel='noopener noreferrer'>在 Google 地图查看位置</a>")
+        : "<span>Google 地图链接：暂无</span>";
+      return (
+        "<div class='panel-links'>" +
+        visaRowHtml +
+        "<div class='panel-link-row'>" + mapLinkHtml + "</div>" +
+        "</div>"
+      );
+    }
+
+    function enrichRecordForPanel(rec) {
+      if (!rec) return rec;
+      const byIso = rec.iso3 ? allRows.find((r) => r.iso3 === rec.iso3) : null;
+      const byName = !byIso && rec.country ? allRows.find((r) => r.country === rec.country) : null;
+      const full = byIso || byName || {};
+      return {
+        country: rec.country || full.country || "未知",
+        country_en: rec.country_en || full.country_en || "",
+        type: rec.type || full.type || "常规签",
+        rawRequirement: rec.rawRequirement || full.rawRequirement || "",
+        stay: rec.stay || full.stay || "",
+        note: rec.note || full.note || "",
+        iso3: rec.iso3 || full.iso3 || "",
+        difficulty: Number(rec.difficulty || full.difficulty || 0)
+      };
+    }
+
+    function openCountryPanel(rec) {
+      if (!countryPanelEl || !countryPanelBodyEl || !rec) return;
+      const enriched = enrichRecordForPanel(rec);
+      countryPanelBodyEl.innerHTML = buildTooltipHtmlFromRecord(enriched) + buildPanelLinksHtml(enriched);
+      countryPanelEl.classList.add("is-open");
+      countryPanelEl.setAttribute("aria-hidden", "false");
+    }
+
+    function placeFixedTooltip(tooltipEl, evt) {
+      if (!tooltipEl || !evt) return;
+      const tipRect = tooltipEl.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const pad = 12;
+      let left = evt.clientX + 14;
+      let top = evt.clientY + 14;
+      if (left + tipRect.width > vw - pad) left = vw - tipRect.width - pad;
+      if (top + tipRect.height > vh - pad) top = vh - tipRect.height - pad;
+      if (left < pad) left = pad;
+      if (top < pad) top = pad;
+      tooltipEl.style.left = left + "px";
+      tooltipEl.style.top = top + "px";
+    }
+
+    function renderMap(rows) {
+      if (!window.Plotly || !worldMapEl) return;
+
+      const hoverLabelStyle = { bgcolor: "rgba(0,0,0,0)", bordercolor: "rgba(0,0,0,0)", font: { color: "rgba(0,0,0,0)" } };
+
+      const mapRows = rows.filter((r) => r.iso3);
+      const isoSet = new Set(mapRows.map((r) => r.iso3));
+      const mapByIso = new Map(mapRows.map((r) => [r.iso3, r]));
+      const noDataRows = WORLD_COUNTRIES.filter((c) => !isoSet.has(c.iso3));
+      const tinyMarkerSize = getTinyMarkerSize(mapGeoScale);
+      const noDataByIso = new Map(noDataRows.map((c) => [c.iso3, c]));
+      const typeMeta = {
+        "免签": { color: "#3b82f6", badge: "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #93c5fd;border-radius:999px;color:#1e3a8a;background:#eff6ff;'>免签</span>" },
+        "落地签": { color: "#22c55e", badge: "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #86efac;border-radius:999px;color:#166534;background:#f0fdf4;'>落地签</span>" },
+        "电子签": { color: "#facc15", badge: "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #fde047;border-radius:999px;color:#854d0e;background:#fefce8;'>电子签</span>" },
+        "常规签": { color: "#6b7280", badge: "<span style='display:inline-block;margin:2px 0 6px;padding:1px 8px;border:1px solid #d1d5db;border-radius:999px;color:#374151;background:#f9fafb;'>常规签</span>" }
+      };
+      const difficultyMeta = {
+        1: { color: "#3b82f6" },
+        2: { color: "#22c55e" },
+        3: { color: "#eab308" },
+        4: { color: "#fb8c00" },
+        5: { color: "#8e24aa" }
+      };
+      const groups = mapColorMode === "difficulty"
+        ? [
+            { key: "1", rows: mapRows.filter((r) => Number(r.difficulty) === 1), color: difficultyMeta[1].color },
+            { key: "2", rows: mapRows.filter((r) => Number(r.difficulty) === 2), color: difficultyMeta[2].color },
+            { key: "3", rows: mapRows.filter((r) => Number(r.difficulty) === 3), color: difficultyMeta[3].color },
+            { key: "4", rows: mapRows.filter((r) => Number(r.difficulty) === 4), color: difficultyMeta[4].color },
+            { key: "5", rows: mapRows.filter((r) => Number(r.difficulty) === 5), color: difficultyMeta[5].color }
+          ]
+        : [
+            { key: "免签", rows: mapRows.filter((r) => r.type === "免签"), color: typeMeta["免签"].color },
+            { key: "落地签", rows: mapRows.filter((r) => r.type === "落地签"), color: typeMeta["落地签"].color },
+            { key: "电子签", rows: mapRows.filter((r) => r.type === "电子签"), color: typeMeta["电子签"].color },
+            { key: "常规签", rows: mapRows.filter((r) => r.type === "常规签"), color: typeMeta["常规签"].color }
+          ];
+      const noDataCustom = noDataRows.map((c) => [
+        getRegionDisplayName(c.iso2, c.name),
+        c.name,
+        c.iso3
+      ]);
+
+      const noDataTrace = {
+        type: "choropleth",
+        locationmode: "ISO-3",
+        locations: noDataRows.map((c) => c.iso3),
+        z: new Array(noDataRows.length).fill(0),
+        customdata: noDataCustom,
+        hoverinfo: "none",
+        colorscale: [
+          [0, "#d1d5db"],
+          [1, "#d1d5db"]
+        ],
+        zmin: 0,
+        zmax: 1,
+        marker: {
+          line: {
+            color: "#ffffff",
+            width: 0.3
+          }
+        },
+        showscale: false,
+        hoverlabel: hoverLabelStyle
+      };
+
+      const makeGroupTrace = (group) => ({
+        type: "choropleth",
+        locationmode: "ISO-3",
+        locations: group.rows.map((r) => r.iso3),
+        z: new Array(group.rows.length).fill(1),
+        customdata: group.rows.map((r) => [
+          r.country,
+          r.type,
+          formatHoverText(r.rawRequirement, 34),
+          formatHoverText(r.stay, 34),
+          formatHoverText(r.note, 34),
+          r.iso3,
+          r.difficulty || 0
+        ]),
+        hoverinfo: "none",
+        colorscale: [[0, group.color], [1, group.color]],
+        zmin: 0,
+        zmax: 1,
+        marker: {
+          line: {
+            color: "#ffffff",
+            width: 0.3
+          }
+        },
+        showscale: false,
+        hoverlabel: hoverLabelStyle
+      });
+
+      // Comprehensive tiny-country coordinate fallback to guarantee visibility.
+      const forcedCoords = {
+        AND: { lon: 1.52, lat: 42.51 }, ANT: { lon: -68.99, lat: 12.19 }, ATG: { lon: -61.79, lat: 17.12 },
+        BHR: { lon: 50.55, lat: 26.07 }, BHS: { lon: -77.40, lat: 25.03 }, BRB: { lon: -59.56, lat: 13.19 },
+        BRN: { lon: 114.73, lat: 4.53 }, COM: { lon: 43.33, lat: -11.70 }, CPV: { lon: -23.60, lat: 15.12 },
+        CYP: { lon: 33.43, lat: 35.13 }, DMA: { lon: -61.37, lat: 15.41 }, DOM: { lon: -70.16, lat: 18.74 },
+        FJI: { lon: 178.07, lat: -17.71 }, FSM: { lon: 158.20, lat: 6.88 }, GRD: { lon: -61.68, lat: 12.12 },
+        KIR: { lon: 173.03, lat: 1.87 }, KNA: { lon: -62.75, lat: 17.35 },
+        KWT: { lon: 47.48, lat: 29.38 }, LCA: { lon: -60.98, lat: 13.91 }, LIE: { lon: 9.56, lat: 47.17 },
+        LUX: { lon: 6.13, lat: 49.82 }, MCO: { lon: 7.42, lat: 43.73 },
+        MDA: { lon: 28.86, lat: 47.01 }, MDV: { lon: 73.50, lat: 4.17 }, MHL: { lon: 171.18, lat: 7.13 },
+        MLT: { lon: 14.38, lat: 35.94 }, MUS: { lon: 57.55, lat: -20.20 }, NRU: { lon: 166.93, lat: -0.52 },
+        PLW: { lon: 134.58, lat: 7.51 }, QAT: { lon: 51.18, lat: 25.35 }, SMR: { lon: 12.45, lat: 43.94 },
+        SGP: { lon: 103.82, lat: 1.35 }, SLB: { lon: 160.16, lat: -9.65 }, STP: { lon: 6.73, lat: 0.19 },
+        SYC: { lon: 55.49, lat: -4.68 }, TLS: { lon: 125.73, lat: -8.56 }, TON: { lon: -175.20, lat: -21.18 },
+        TTO: { lon: -61.22, lat: 10.69 }, TUV: { lon: 177.65, lat: -7.11 }, VAT: { lon: 12.45, lat: 41.90 },
+        VCT: { lon: -61.20, lat: 13.25 }, VUT: { lon: 166.96, lat: -15.38 }, WSM: { lon: -172.10, lat: -13.76 }
+      };
+      const forcedData = [];
+      const forcedNoData = [];
+      Object.keys(forcedCoords).forEach((iso3) => {
+        if (mapByIso.has(iso3)) {
+          const r = mapByIso.get(iso3);
+          forcedData.push({
+            iso3,
+            lon: forcedCoords[iso3].lon,
+            lat: forcedCoords[iso3].lat,
+            custom: [
+              r.country,
+              r.type,
+              formatHoverText(r.rawRequirement, 34),
+              formatHoverText(r.stay, 34),
+              formatHoverText(r.note, 34),
+              r.iso3,
+              r.difficulty || 0
+            ],
+            color: mapColorMode === "difficulty"
+              ? (difficultyMeta[Number(r.difficulty) || 1]?.color || "#3b82f6")
+              : (
+                r.type === "免签" ? "#3b82f6" :
+                r.type === "落地签" ? "#22c55e" :
+                r.type === "电子签" ? "#facc15" : "#6b7280"
+              )
+          });
+        } else if (noDataByIso.has(iso3)) {
+          const c = noDataByIso.get(iso3);
+          forcedNoData.push({
+            iso3,
+            lon: forcedCoords[iso3].lon,
+            lat: forcedCoords[iso3].lat,
+            custom: [getRegionDisplayName(c.iso2, c.name), c.name, iso3]
+          });
+        }
+      });
+
+      const forcedNoDataTrace = {
+        type: "scattergeo",
+        mode: "markers",
+        lon: forcedNoData.map((x) => x.lon),
+        lat: forcedNoData.map((x) => x.lat),
+        marker: {
+          size: tinyMarkerSize,
+          color: "#9ca3af",
+          line: { color: "#ffffff", width: 1.1 },
+          opacity: 0.98
+        },
+        customdata: forcedNoData.map((x) => x.custom),
+        hoverinfo: "none",
+        showlegend: false,
+        hoverlabel: hoverLabelStyle
+      };
+
+      const forcedDataTrace = {
+        type: "scattergeo",
+        mode: "markers",
+        lon: forcedData.map((x) => x.lon),
+        lat: forcedData.map((x) => x.lat),
+        marker: {
+          size: tinyMarkerSize,
+          color: forcedData.map((x) => x.color),
+          line: { color: "#ffffff", width: 1.1 },
+          opacity: 0.98
+        },
+        customdata: forcedData.map((x) => x.custom),
+        hoverinfo: "none",
+        showlegend: false,
+        hoverlabel: hoverLabelStyle
+      };
+
+      // Lightweight hover highlight: slightly brighten hovered country fill.
+      const hoverFillTrace = {
+        type: "choropleth",
+        locationmode: "ISO-3",
+        locations: [],
+        z: [],
+        hoverinfo: "skip",
+        showscale: false,
+        colorscale: [[0, "rgba(255,255,255,0.14)"], [1, "rgba(255,255,255,0.14)"]],
+        marker: { line: { width: 0 } }
+      };
+      const hoverPointTrace = {
+        type: "scattergeo",
+        mode: "markers",
+        lon: [],
+        lat: [],
+        hoverinfo: "skip",
+        showlegend: false,
+        marker: {
+          size: tinyMarkerSize + 3.2,
+          color: "rgba(255,255,255,0)",
+          line: { color: "#ffffff", width: 1.6 },
+          opacity: 1
+        }
+      };
+
+      const css = getComputedStyle(document.body);
+      const mapBg = css.getPropertyValue("--map-bg").trim() || "#ffffff";
+      const mapCoast = css.getPropertyValue("--map-coast").trim() || "#d1d5db";
+      const mapCountry = css.getPropertyValue("--map-country").trim() || "#a8b3c2";
+      const mapLand = css.getPropertyValue("--map-land").trim() || "#d1d5db";
+      const mapOcean = css.getPropertyValue("--map-ocean").trim() || "#e6f2ff";
+      const mapLake = css.getPropertyValue("--map-lake").trim() || "#cfe8ff";
+
+      const layout = {
+        dragmode: "pan",
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        paper_bgcolor: mapBg,
+        geo: {
+          scope: "world",
+          projection: { type: "equirectangular" },
+          showframe: false,
+          showcoastlines: true,
+          coastlinecolor: mapCoast,
+          coastlinewidth: 0.6,
+          showcountries: true,
+          countrycolor: mapCountry,
+          countrywidth: 0.45,
+          showland: true,
+          landcolor: mapLand,
+          showocean: true,
+          oceancolor: mapOcean,
+          showlakes: true,
+          lakecolor: mapLake,
+          bgcolor: mapBg
+        }
+      };
+
+      const groupCount = groups.length;
+      mapForcedNoDataTraceIdx = 1 + groupCount;
+      mapForcedDataTraceIdx = mapForcedNoDataTraceIdx + 1;
+      mapHoverFillTraceIdx = mapForcedNoDataTraceIdx + 2;
+      mapHoverPointTraceIdx = mapForcedNoDataTraceIdx + 3;
+
+      Plotly.react(
+        worldMapEl,
+        [
+          noDataTrace,
+          ...groups.map((g) => makeGroupTrace(g)),
+          forcedNoDataTrace,
+          forcedDataTrace,
+          hoverFillTrace,
+          hoverPointTrace
+        ],
+        layout,
+        {
+        responsive: true,
+        displayModeBar: false,
+        scrollZoom: true,
+        hoverdistance: 3
+        }
+      );
+
+      bindMapScaleListener();
+      bindCustomTooltip();
+    }
+
+    function getTinyMarkerSize(scale) {
+      const s = Number(scale) || 1;
+      // Keep tiny-country hit area modest on zoomed-out maps,
+      // then grow progressively as user zooms in.
+      return Math.max(1.5, Math.min(7.2, 1.85 + Math.pow(Math.max(0, s - 1), 1.22) * 2.05));
+    }
+
+    function bindMapScaleListener() {
+      if (worldMapEl.__scaleListenerBound) return;
+      worldMapEl.__scaleListenerBound = true;
+      let scaleDebounceTimer = null;
+      let lastAppliedSize = getTinyMarkerSize(mapGeoScale);
+
+      const applyScale = (scale) => {
+        const s = Number(scale);
+        if (!s || Number.isNaN(s)) return;
+        mapGeoScale = s;
+        const nextSize = getTinyMarkerSize(mapGeoScale);
+        // Skip tiny size changes to reduce expensive restyle calls.
+        if (Math.abs(nextSize - lastAppliedSize) < 0.45) return;
+        lastAppliedSize = nextSize;
+        Plotly.restyle(worldMapEl, { "marker.size": nextSize }, [mapForcedNoDataTraceIdx, mapForcedDataTraceIdx]);
+        Plotly.restyle(worldMapEl, { "marker.size": nextSize + 3.2 }, [mapHoverPointTraceIdx]);
+      };
+
+      const scheduleApply = (scale) => {
+        if (scaleDebounceTimer) clearTimeout(scaleDebounceTimer);
+        scaleDebounceTimer = setTimeout(() => applyScale(scale), 80);
+      };
+
+      worldMapEl.on("plotly_relayout", (evt) => {
+        const nextScale = evt && typeof evt["geo.projection.scale"] === "number"
+          ? evt["geo.projection.scale"]
+          : null;
+        if (!nextScale) return;
+        scheduleApply(nextScale);
+      });
+    }
+
+    function bindCustomTooltip() {
+      if (worldMapEl.__customTooltipBound) return;
+      worldMapEl.__customTooltipBound = true;
+      let lastHoverIso3 = "";
+      let lastHoverPointKey = "";
+      let tooltipActive = false;
+      let pointerDownOnMap = false;
+      let mapInteracting = false;
+      let downX = 0;
+      let downY = 0;
+
+      const placeTooltip = (evt) => {
+        if (!mapTooltipEl) return;
+        const mapRect = worldMapEl.getBoundingClientRect();
+        const tipRect = mapTooltipEl.getBoundingClientRect();
+        const pad = 12;
+        let left = evt.clientX - mapRect.left + 14;
+        let top = evt.clientY - mapRect.top + 14;
+        if (left + tipRect.width > mapRect.width - pad) left = mapRect.width - tipRect.width - pad;
+        if (top + tipRect.height > mapRect.height - pad) top = mapRect.height - tipRect.height - pad;
+        if (left < pad) left = pad;
+        if (top < pad) top = pad;
+        mapTooltipEl.style.left = left + "px";
+        mapTooltipEl.style.top = top + "px";
+      };
+
+      worldMapEl.on("plotly_beforehover", () => {
+        // Hard-stop hover during drag/zoom interactions.
+        return !(pointerDownOnMap || mapInteracting);
+      });
+
+      worldMapEl.on("plotly_hover", (e) => {
+        if (pointerDownOnMap || mapInteracting) return;
+        if (!mapTooltipEl || !e || !e.points || !e.points.length) return;
+        const p = e.points[0];
+        const d = p.customdata || [];
+        let hoverIso3 = "";
+        let flag = "🇺🇳";
+        const isPointHover = p && p.fullData && p.fullData.type === "scattergeo";
+        // Keep point hover behavior stable; avoid over-filtering point hits here.
+
+        const renderTooltip = () => {
+          if (d.length >= 5) {
+            const type = d[1] || "常规签";
+            hoverIso3 = (typeof p.location === "string" && p.location.length === 3) ? p.location : (d[5] || "");
+            mapTooltipEl.innerHTML = buildTooltipHtmlFromRecord({
+              country: d[0],
+              type,
+              rawRequirement: d[2],
+              stay: d[3],
+              note: d[4],
+              iso3: hoverIso3,
+              difficulty: Number(d[6] || 0)
+            });
+          } else {
+            hoverIso3 = (typeof p.location === "string" && p.location.length === 3) ? p.location : (d[2] || "");
+            flag = getFlagEmoji(hoverIso3);
+            const name = d[0] || "未知";
+            mapTooltipEl.innerHTML =
+              "<div class='map-tooltip-title'>" + flag + " " + escapeHtml(name) + "</div>" +
+              "<div class='map-tooltip-chip chip-regular'>无签证信息</div>";
+          }
+
+          mapTooltipEl.style.display = "block";
+          tooltipActive = true;
+          if (e.event) placeTooltip(e.event);
+
+          // Lightweight hover highlight by brightening hovered country fill.
+          if (hoverIso3 && hoverIso3 !== lastHoverIso3) {
+            lastHoverIso3 = hoverIso3;
+            Plotly.restyle(worldMapEl, { locations: [[hoverIso3]], z: [[1]] }, [mapHoverFillTraceIdx]);
+          }
+          if (isPointHover && typeof p.lon === "number" && typeof p.lat === "number") {
+            const pointKey = p.lon.toFixed(4) + "," + p.lat.toFixed(4);
+            if (pointKey !== lastHoverPointKey) {
+              lastHoverPointKey = pointKey;
+              Plotly.restyle(worldMapEl, { lon: [[p.lon]], lat: [[p.lat]] }, [mapHoverPointTraceIdx]);
+            }
+          } else {
+            if (lastHoverPointKey) {
+              lastHoverPointKey = "";
+              Plotly.restyle(worldMapEl, { lon: [[]], lat: [[]] }, [mapHoverPointTraceIdx]);
+            }
+          }
+        };
+
+        renderTooltip();
+      });
+      worldMapEl.on("plotly_unhover", () => {
+        if (mapTooltipEl) mapTooltipEl.style.display = "none";
+        tooltipActive = false;
+        if (lastHoverIso3) {
+          lastHoverIso3 = "";
+          Plotly.restyle(worldMapEl, { locations: [[]], z: [[]] }, [mapHoverFillTraceIdx]);
+        }
+        if (lastHoverPointKey) {
+          lastHoverPointKey = "";
+          Plotly.restyle(worldMapEl, { lon: [[]], lat: [[]] }, [mapHoverPointTraceIdx]);
+        }
+      });
+
+      worldMapEl.on("plotly_relayouting", () => {
+        mapInteracting = true;
+        if (mapTooltipEl) mapTooltipEl.style.display = "none";
+        tooltipActive = false;
+      });
+      worldMapEl.on("plotly_relayout", () => {
+        mapInteracting = false;
+        if (lastHoverIso3) {
+          lastHoverIso3 = "";
+          Plotly.restyle(worldMapEl, { locations: [[]], z: [[]] }, [mapHoverFillTraceIdx]);
+        }
+        if (lastHoverPointKey) {
+          lastHoverPointKey = "";
+          Plotly.restyle(worldMapEl, { lon: [[]], lat: [[]] }, [mapHoverPointTraceIdx]);
+        }
+      });
+
+      worldMapEl.addEventListener("pointerdown", (evt) => {
+        pointerDownOnMap = true;
+        mapInteracting = true;
+        downX = evt.clientX;
+        downY = evt.clientY;
+        if (mapTooltipEl) mapTooltipEl.style.display = "none";
+        tooltipActive = false;
+      });
+      window.addEventListener("pointerup", () => {
+        pointerDownOnMap = false;
+        // Allow Plotly a short settle window before restoring hover.
+        setTimeout(() => {
+          mapInteracting = false;
+        }, 40);
+      });
+
+      worldMapEl.addEventListener("mousemove", (evt) => {
+        if (pointerDownOnMap) {
+          const dx = Math.abs(evt.clientX - downX);
+          const dy = Math.abs(evt.clientY - downY);
+          if (dx + dy > 5) mapInteracting = true;
+        }
+        if (!tooltipActive || !mapTooltipEl || mapTooltipEl.style.display === "none") return;
+        placeTooltip(evt);
+      });
+    }
+
+    function scheduleMapRender(rows) {
+      if (mapRenderTimer) {
+        clearTimeout(mapRenderTimer);
+      }
+      mapRenderTimer = setTimeout(() => {
+        renderMap(rows);
+      }, 220);
+    }
+
+    render();
+    scheduleMapRender(allRows);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1739 @@
+[
+  {
+    "country": "不丹",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Bhutan",
+    "iso3": "BTN"
+  },
+  {
+    "country": "东帝汶",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "30天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Timor-Leste",
+    "iso3": "TLS"
+  },
+  {
+    "country": "中非共和国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Central African Republic",
+    "iso3": "CAF"
+  },
+  {
+    "country": "丹麦",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Denmark",
+    "iso3": "DNK"
+  },
+  {
+    "country": "乌克兰",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "乌克兰于 2025 年 2 月恢复电子签证服务。",
+    "country_en": "Ukraine",
+    "iso3": "UKR"
+  },
+  {
+    "country": "乌兹别克斯坦",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "停留期限每次为30天，任意180天内不得超过90天。",
+    "country_en": "Uzbekistan",
+    "iso3": "UZB"
+  },
+  {
+    "country": "乌干达",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "3个月",
+    "note": "也可以持肯尼亚或卢旺达签发的东非旅游签证入境。",
+    "country_en": "Uganda",
+    "iso3": "UGA"
+  },
+  {
+    "country": "乌拉圭",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "National visa may be substituted with a valid visa issued by the United States, Canada or a European Union member state for stays up to 90 days when arriving via Montevideo airport or Montevideo and Colonia ports.美国绿卡持有者需要申请签证。向您最近的领事馆发送电子邮件进行确认。自2018年7月14日起，签发的商务​​签证有效期为10年。持有因公护照的人不需要签证。",
+    "country_en": "Uruguay",
+    "iso3": "URY"
+  },
+  {
+    "country": "乍得",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Chad",
+    "iso3": "TCD"
+  },
+  {
+    "country": "也门",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Yemen",
+    "iso3": "YEM"
+  },
+  {
+    "country": "亚美尼亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "任意 180 天内的 90 天。持有因公护照的人在最长 30 天的时间内不需要签证。",
+    "country_en": "Armenia",
+    "iso3": "ARM"
+  },
+  {
+    "country": "以色列",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "截至2017年，签证有效期为10年。",
+    "country_en": "Israel",
+    "iso3": "ISR"
+  },
+  {
+    "country": "伊拉克",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "自 2025 年 3 月 1 日起，建议使用落地签证设施的国家/地区的公民在通过链接前往伊拉克之前申请电子签证。",
+    "country_en": "Iraq",
+    "iso3": "IRQ"
+  },
+  {
+    "country": "伊朗",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "21天",
+    "note": "",
+    "country_en": "Iran, Islamic Republic of",
+    "iso3": "IRN"
+  },
+  {
+    "country": "伯利兹",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "游轮乘客不需要签证。持有加拿大或美国签发的多次入境签证或永久居民卡，可免签证入境最长 30 天。持有申根国家签发的多次入境签证的人可免签证入境长达 30 天。",
+    "country_en": "Belize",
+    "iso3": "BLZ"
+  },
+  {
+    "country": "佛得角",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival[6]",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Cabo Verde",
+    "iso3": "CPV"
+  },
+  {
+    "country": "俄罗斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "2026 年 9 月 14 日之前免签证。5 至 50 名游客的团体无需签证即可通过预先批准的旅行社进入俄罗斯，停留最多 15 天。",
+    "country_en": "Russian Federation",
+    "iso3": "RUS"
+  },
+  {
+    "country": "保加利亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Bulgaria",
+    "iso3": "BGR"
+  },
+  {
+    "country": "克罗地亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Croatia",
+    "iso3": "HRV"
+  },
+  {
+    "country": "冈比亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Gambia",
+    "iso3": "GMB"
+  },
+  {
+    "country": "冰岛",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Iceland",
+    "iso3": "ISL"
+  },
+  {
+    "country": "几内亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "90天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Guinea",
+    "iso3": "GIN"
+  },
+  {
+    "country": "几内亚比绍",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Guinea-Bissau",
+    "iso3": "GNB"
+  },
+  {
+    "country": "列支敦士登",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Liechtenstein",
+    "iso3": "LIE"
+  },
+  {
+    "country": "刚果（布）",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Congo",
+    "iso3": "COG"
+  },
+  {
+    "country": "刚果（金）",
+    "type": "电子签",
+    "rawRequirement": "eVisa[6][43]",
+    "stay": "7天",
+    "note": "",
+    "country_en": "Congo, The Democratic Republic of the",
+    "iso3": "COD"
+  },
+  {
+    "country": "利比亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Libya",
+    "iso3": "LBY"
+  },
+  {
+    "country": "利比里亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Liberia",
+    "iso3": "LBR"
+  },
+  {
+    "country": "加拿大",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有有效美国签证并乘坐加拿大航空（包括子公司加航 Rouge 和爵士航空）、中国国际航空、国泰航空、中华航空、中国东方航空、中国南方航空、海南航空运营的航班，并在抵达后 24 小时内经卡尔加里、蒙特利尔特鲁多机场（仅限加拿大航空航班）、多伦多皮尔逊机场（仅限 1 号航站楼，不可变更航站楼或在 3 号航站楼转机）、温哥华国际机场或温尼伯机场往返美国，无需过境签证。菲律宾航空、西捷航空或厦门航空。如果前往美国，需要从北京、成都、福州、广州、哈尔滨、香港、马尼拉、名古屋、大阪、首尔、上海、沉阳、台北、东京或厦门出发。如果离开美国，则无需受到驱逐令或驱逐令，也无需在美国停留超过授权时间。美国永久居民不需要签证。",
+    "country_en": "Canada",
+    "iso3": "CAN"
+  },
+  {
+    "country": "加纳",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Ghana",
+    "iso3": "GHA"
+  },
+  {
+    "country": "加蓬",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "90天",
+    "note": "电子签证持有者必须通过利伯维尔国际机场抵达。持有因公护照的人不需要签证。",
+    "country_en": "Gabon",
+    "iso3": "GAB"
+  },
+  {
+    "country": "匈牙利",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Hungary",
+    "iso3": "HUN"
+  },
+  {
+    "country": "朝鲜",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "中国游客可免签证前往东林郡旅游2天。他们还可以在没有签证的情况下前往新义州进行一日游。持有因公护照的人不需要签证。",
+    "country_en": "Korea, Democratic People's Republic of",
+    "iso3": "PRK"
+  },
+  {
+    "country": "北马其顿",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "如果签证的有效期比在北马其顿的预定停留期限至少长 5 天，则国家签证可以用申根区成员国、美国、加拿大或英国签发的停留期最长为 15 天的有效签证代替。 *Holders of passports for public affairs do not require a visa.如果护照上注明“出于公共事务”，则可免签证。",
+    "country_en": "North Macedonia",
+    "iso3": "MKD"
+  },
+  {
+    "country": "南苏丹",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "可在线获取。旅行时必须出示打印的签证授权书。持有因公护照的人不需要签证。",
+    "country_en": "South Sudan",
+    "iso3": "SSD"
+  },
+  {
+    "country": "南非",
+    "type": "电子签",
+    "rawRequirement": "Electronic Travel Authorization / eVisa",
+    "stay": "90天",
+    "note": "凭借预计到达时间，中国护照持有者可经奥利弗·雷金纳德·坦博国际机场或开普敦机场入境，停留时间最长为 90 天。 ETA 有效期为 1 年，可多次入境，每次停留最多 90 天。 ETA issuance is usually within an hour. In addition to ETA, e-Visa is also available.",
+    "country_en": "South Africa",
+    "iso3": "ZAF"
+  },
+  {
+    "country": "博茨瓦纳",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "3个月",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Botswana",
+    "iso3": "BWA"
+  },
+  {
+    "country": "卡塔尔",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Qatar",
+    "iso3": "QAT"
+  },
+  {
+    "country": "卢旺达",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Rwanda",
+    "iso3": "RWA"
+  },
+  {
+    "country": "卢森堡",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Luxembourg",
+    "iso3": "LUX"
+  },
+  {
+    "country": "印度",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "由于中国和印度之间的军事紧张局势，电子签证不再可用。",
+    "country_en": "India",
+    "iso3": "IND"
+  },
+  {
+    "country": "印度尼西亚",
+    "type": "落地签",
+    "rawRequirement": "e-VOA / Visa on arrival",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Indonesia",
+    "iso3": "IDN"
+  },
+  {
+    "country": "危地马拉",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "根据《中美洲-4 边境管制协议》，持有萨尔瓦多、洪都拉斯或尼加拉瓜签证或居留许可的旅客无需签证即可进入危地马拉。自2019年起，任何欧盟成员国、安道尔、安提瓜和巴布达、阿根廷、澳大利亚、巴哈马、巴林、巴巴多斯、伯利兹、巴西、文莱、加拿大、智利、哥伦比亚、哥斯达黎加、斐济、洪都拉斯、冰岛、以色列、日本、科威特、列支敦士登、马达加斯加、马来西亚、马绍尔群岛、墨西哥、摩纳哥、新西兰、北马其顿、挪威、巴拿马、巴拉圭、秘鲁、卡塔尔、俄罗斯、圣基茨和尼维斯、圣卢西亚、圣文森特和格林纳丁斯、圣马力诺、圣多美和普林西比、沙特阿拉伯、新加坡、所罗门群岛、南非、韩国、瑞士、中国台湾、特立尼达和多巴哥、土耳其、图瓦卢、乌克兰、阿拉伯联合酋长国、英国、美国、乌拉圭、瓦努阿图和梵蒂冈城，无论国籍如何，都可以免签证进入危地马拉。",
+    "country_en": "Guatemala",
+    "iso3": "GTM"
+  },
+  {
+    "country": "厄瓜多尔",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "自2024年7月1日起，厄瓜多尔恢复对中国公民的签证要求。",
+    "country_en": "Ecuador",
+    "iso3": "ECU"
+  },
+  {
+    "country": "厄立特里亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Eritrea",
+    "iso3": "ERI"
+  },
+  {
+    "country": "叙利亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Syrian Arab Republic",
+    "iso3": "SYR"
+  },
+  {
+    "country": "古巴",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Cuba",
+    "iso3": "CUB"
+  },
+  {
+    "country": "史瓦帝尼",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Eswatini",
+    "iso3": "SWZ"
+  },
+  {
+    "country": "吉尔吉斯斯坦",
+    "type": "免签",
+    "rawRequirement": "Visa not required (conditional) / eVisa",
+    "stay": "21天/60天",
+    "note": "5至25人的团体游客可以通过预先批准的旅行社免签证进入吉尔吉斯斯坦，停留时间最长为21天。电子签证持有者必须通过玛纳斯国际机场或奥什机场或通过中国（伊尔克什坦和图尔嘎特）、哈萨克斯坦（阿克乔尔、阿克蒂莱克、查尔迪巴尔、春卡普卡）、塔吉克斯坦（博尔多博、库伦杜、克孜勒贝尔）和乌兹别克斯坦（多斯图克）的陆路入境。通过玛纳斯国际机场检查站抵达的中国公民，如果持有价值至少 500 美元的代金券（可在抵达玛纳斯国际机场时购买）以及前往其国籍国或自出发之日起 21 天后有权免签再次入境的第三国的往返机票，可免签停留最长 7 天；或持有美利坚合众国、大不列颠及北爱尔兰王国、申根区长期签证（3年以上），可免签停留7天，并有权自出发之日起21天后免签再次入境。",
+    "country_en": "Kyrgyzstan",
+    "iso3": "KGZ"
+  },
+  {
+    "country": "吉布提",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "90天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Djibouti",
+    "iso3": "DJI"
+  },
+  {
+    "country": "哈萨克斯坦",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "任何 180 天内的 90 天。",
+    "country_en": "Kazakhstan",
+    "iso3": "KAZ"
+  },
+  {
+    "country": "哥伦比亚",
+    "type": "常规签",
+    "rawRequirement": "Online Visa",
+    "stay": "",
+    "note": "国家签证可以由申根区成员国或美国签发的签证或居留许可替代，该签证或居留许可的有效期自抵达之日起至少有 180 天。",
+    "country_en": "Colombia",
+    "iso3": "COL"
+  },
+  {
+    "country": "哥斯达黎加",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人无需签证即可停留最多 30 天。国家签证可以用加拿大或美国签发的签证代替。",
+    "country_en": "Costa Rica",
+    "iso3": "CRI"
+  },
+  {
+    "country": "喀麦隆",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Cameroon",
+    "iso3": "CMR"
+  },
+  {
+    "country": "图瓦卢",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "1个月",
+    "note": "",
+    "country_en": "Tuvalu",
+    "iso3": "TUV"
+  },
+  {
+    "country": "土库曼斯坦",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Turkmenistan",
+    "iso3": "TKM"
+  },
+  {
+    "country": "土耳其",
+    "type": "免签",
+    "rawRequirement": "Visa not required[6]",
+    "stay": "90天",
+    "note": "任何 180 天内的 90 天。[151]",
+    "country_en": "Turkey",
+    "iso3": "TUR"
+  },
+  {
+    "country": "圣卢西亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "6周",
+    "note": "",
+    "country_en": "Saint Lucia",
+    "iso3": "LCA"
+  },
+  {
+    "country": "圣基茨和尼维斯",
+    "type": "常规签",
+    "rawRequirement": "Electronic Travel Authorisation",
+    "stay": "3个月",
+    "note": "",
+    "country_en": "Saint Kitts and Nevis",
+    "iso3": "KNA"
+  },
+  {
+    "country": "圣多美和普林西比",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "15天。",
+    "note": "持有美国和申根区签证的人不需要签证。持有因公护照的人不需要签证。",
+    "country_en": "Sao Tome and Principe",
+    "iso3": "STP"
+  },
+  {
+    "country": "圣文森特和格林纳丁斯",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Saint Vincent and the Grenadines",
+    "iso3": "VCT"
+  },
+  {
+    "country": "圣马力诺",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90 天。",
+    "note": "虽然官方不需要签证，但进入圣马力诺至少需要单次入境申根签证，因为它没有自己的机场设施，也没有边境管制。",
+    "country_en": "San Marino",
+    "iso3": "SMR"
+  },
+  {
+    "country": "圭亚那",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。据Timatic称，所有其他不免签证的游客都可以在出发前获得电子签证。",
+    "country_en": "Guyana",
+    "iso3": "GUY"
+  },
+  {
+    "country": "坦桑尼亚",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Tanzania, United Republic of",
+    "iso3": "TZA"
+  },
+  {
+    "country": "埃及",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "30天",
+    "note": "中国公民有资格申请电子签证。根据国际航空运输协会的规定，中国公民可以凭当地旅行社的担保函申请最长停留期限为一个月的落地签证。",
+    "country_en": "Egypt",
+    "iso3": "EGY"
+  },
+  {
+    "country": "埃塞俄比亚",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "90天",
+    "note": "落地签证只能在亚的斯亚贝巴博莱国际机场办理。电子签证持有者必须通过亚的斯亚贝巴博莱国际机场抵达。电子签证有效期为 30 天或 90 天。持有因公护照的人可免签证。",
+    "country_en": "Ethiopia",
+    "iso3": "ETH"
+  },
+  {
+    "country": "基里巴斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "任何 12 个月期间内的 90 天。",
+    "country_en": "Kiribati",
+    "iso3": "KIR"
+  },
+  {
+    "country": "塔吉克斯坦",
+    "type": "免签",
+    "rawRequirement": "Visa not required (conditional) / eVisa",
+    "stay": "14天/60天",
+    "note": "持有因公护照的人不需要签证。 55岁及以上护照持有者无需签证14天。",
+    "country_en": "Tajikistan",
+    "iso3": "TJK"
+  },
+  {
+    "country": "塞内加尔",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "30天",
+    "note": "持有因公护照的人不需要签证 30 天。",
+    "country_en": "Senegal",
+    "iso3": "SEN"
+  },
+  {
+    "country": "塞尔维亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "持有因公事务护照的人在 6 个月内不需要签证最多 90 天。长期居留（最多 180 天）签证免费签发。",
+    "country_en": "Serbia",
+    "iso3": "SRB"
+  },
+  {
+    "country": "塞拉利昂",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "3个月/30天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Sierra Leone",
+    "iso3": "SLE"
+  },
+  {
+    "country": "塞浦路斯",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有有效的两次或多次入境申根签证以及申根成员国颁发的居留许可的持有人无需持有短期停留签证即可进入塞浦路斯共和国，停留时间在任何 180 天的期限内不超过 90 天。",
+    "country_en": "Cyprus",
+    "iso3": "CYP"
+  },
+  {
+    "country": "塞舌尔",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "3个月",
+    "note": "",
+    "country_en": "Seychelles",
+    "iso3": "SYC"
+  },
+  {
+    "country": "墨西哥",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "国家签证可用加拿大、日本、英国、美国或申根区成员国签发的有效签证（除过境外的任何类别）或永久居留权代替，可免签证入境 180 天。智利或哥伦比亚永久居留权持有者可免签证入境 180 天。注意： 临时居留卡、许可证或这些国家颁发的其他文件（如欧盟临时居留卡、加拿大学习/工作许可证或美国 I-20 表格、EAD 卡）不能进入墨西哥。仅接受贴在护照上的有效签证（任何类别，过境签证除外）。",
+    "country_en": "Mexico",
+    "iso3": "MEX"
+  },
+  {
+    "country": "多哥",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "15天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Togo",
+    "iso3": "TGO"
+  },
+  {
+    "country": "多明尼加共和国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有加拿大、美国、英国、爱尔兰、塞浦路斯和任何申根区国家签发的签证或永久居留卡的人可以免签证入境，最长停留时间为 30 天。英国居民可在抵达时获得旅游卡，最长可停留 90 天。",
+    "country_en": "Dominican Republic",
+    "iso3": "DOM"
+  },
+  {
+    "country": "多米尼克",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Dominica",
+    "iso3": "DMA"
+  },
+  {
+    "country": "奥地利",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Austria",
+    "iso3": "AUT"
+  },
+  {
+    "country": "委内瑞拉",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "为旅游和商务旅客推出电子签证系统。持有因公护照的人不需要签证。",
+    "country_en": "Venezuela, Bolivarian Republic of",
+    "iso3": "VEN"
+  },
+  {
+    "country": "孟加拉国",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "30 天。",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Bangladesh",
+    "iso3": "BGD"
+  },
+  {
+    "country": "安哥拉",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "每次旅行 30 天，但任何 1 个日历年内不得超过 90 天，仅限旅游目的。游客必须持有返程/续程机票和酒店预订确认函。需要国际疫苗接种证书。",
+    "country_en": "Angola",
+    "iso3": "AGO"
+  },
+  {
+    "country": "安提瓜和巴布达",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "停留期限每次为30天，任意180天内不得超过90天。",
+    "country_en": "Antigua and Barbuda",
+    "iso3": "ATG"
+  },
+  {
+    "country": "安道尔",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "",
+    "note": "虽然官方不需要签证，但进入安道尔至少需要两次入境申根签证，因为它没有自己的机场设施。",
+    "country_en": "Andorra",
+    "iso3": "AND"
+  },
+  {
+    "country": "密克罗尼西亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Micronesia, Federated States of",
+    "iso3": "FSM"
+  },
+  {
+    "country": "尼加拉瓜",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Nicaragua",
+    "iso3": "NIC"
+  },
+  {
+    "country": "尼日利亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "90天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Nigeria",
+    "iso3": "NGA"
+  },
+  {
+    "country": "尼日尔",
+    "type": "常规签",
+    "rawRequirement": "eVisa",
+    "stay": "90天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Nigeria",
+    "iso3": "NGA"
+  },
+  {
+    "country": "尼泊尔",
+    "type": "落地签",
+    "rawRequirement": "Online Visa / Free visa on arrival",
+    "stay": "90天",
+    "note": "为中国游客免费签发签证。",
+    "country_en": "Nepal",
+    "iso3": "NPL"
+  },
+  {
+    "country": "巴哈马",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "3个月",
+    "note": "",
+    "country_en": "Bahamas",
+    "iso3": "BHS"
+  },
+  {
+    "country": "巴基斯坦",
+    "type": "电子签",
+    "rawRequirement": "Free eVisa",
+    "stay": "90天",
+    "note": "巴基斯坦电子签证费用免费。电子旅行授权，以获得商务和旅游目的落地签证。",
+    "country_en": "Pakistan",
+    "iso3": "PAK"
+  },
+  {
+    "country": "巴巴多斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Barbados",
+    "iso3": "BRB"
+  },
+  {
+    "country": "巴布亚新几内亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "持有因公护照的人不需要签证。参加注册和组团旅游的中国游客可免费获得30天单次入境旅游签证。",
+    "country_en": "Papua New Guinea",
+    "iso3": "PNG"
+  },
+  {
+    "country": "巴拉圭",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Paraguay",
+    "iso3": "PRY"
+  },
+  {
+    "country": "巴拿马",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "国家签证可以用澳大利亚、加拿大、美国、申根（入境后有效期为 6 个月）或英国签发的有效签证代替，有效期最长为 30 天。自2019年5月2日起，签发的签证有效期为5年，用于度假、商务和探亲目的。持有因公护照的人不需要签证。",
+    "country_en": "Panama",
+    "iso3": "PAN"
+  },
+  {
+    "country": "巴林",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "14天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Bahrain",
+    "iso3": "BHR"
+  },
+  {
+    "country": "巴西",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "30天",
+    "note": "自2024年2月19日起，签发的签证有效期为10年，用于度假、商务和探亲目的。巴西总统于2026年1月23日宣布，巴西将给予中国公民某些类别的短期签证豁免。",
+    "country_en": "Brazil",
+    "iso3": "BRA"
+  },
+  {
+    "country": "布基纳法索",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Burkina Faso",
+    "iso3": "BFA"
+  },
+  {
+    "country": "布隆迪",
+    "type": "落地签",
+    "rawRequirement": "Online Visa / Visa on arrival",
+    "stay": "1个月",
+    "note": "",
+    "country_en": "Burundi",
+    "iso3": "BDI"
+  },
+  {
+    "country": "希腊",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Greece",
+    "iso3": "GRC"
+  },
+  {
+    "country": "帕劳",
+    "type": "落地签",
+    "rawRequirement": "Free visa on arrival",
+    "stay": "30天",
+    "note": "中国政府于2018年8月宣布帕劳为非法团体旅游目的地，中国个人游客不受影响。",
+    "country_en": "Palau",
+    "iso3": "PLW"
+  },
+  {
+    "country": "德国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Germany",
+    "iso3": "DEU"
+  },
+  {
+    "country": "意大利",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Italy",
+    "iso3": "ITA"
+  },
+  {
+    "country": "所罗门群岛",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "普通护照互免签证协议于2024年12月28日生效。",
+    "country_en": "Solomon Islands",
+    "iso3": "SLB"
+  },
+  {
+    "country": "拉脱维亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Latvia",
+    "iso3": "LVA"
+  },
+  {
+    "country": "挪威",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Norway",
+    "iso3": "NOR"
+  },
+  {
+    "country": "捷克共和国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Czechia",
+    "iso3": "CZE"
+  },
+  {
+    "country": "摩尔多瓦",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "除持有欧盟成员国之一或申根协定缔约国之一签发的居留许可或有效签证（不包括过境签证）外，大不列颠及北爱尔兰联合王国、美利坚合众国、加拿大可在有效期内前往摩尔多瓦共和国。持有因公护照的人不需要签证。中国公民可以在线申请签证，无需邀请函。",
+    "country_en": "Moldova, Republic of",
+    "iso3": "MDA"
+  },
+  {
+    "country": "摩洛哥",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Morocco",
+    "iso3": "MAR"
+  },
+  {
+    "country": "摩纳哥",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Monaco",
+    "iso3": "MCO"
+  },
+  {
+    "country": "文莱",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "14天",
+    "note": "",
+    "country_en": "Brunei Darussalam",
+    "iso3": "BRN"
+  },
+  {
+    "country": "斐济",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "4个月",
+    "note": "",
+    "country_en": "Fiji",
+    "iso3": "FJI"
+  },
+  {
+    "country": "斯洛伐克",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Slovakia",
+    "iso3": "SVK"
+  },
+  {
+    "country": "斯洛文尼亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Slovenia",
+    "iso3": "SVN"
+  },
+  {
+    "country": "斯里兰卡",
+    "type": "落地签",
+    "rawRequirement": "Free ETA / Visa on arrival",
+    "stay": "30天",
+    "note": "标准访客签证允许在任何 6 个月期间内停留 60 天。签证费用（标准访客签证）：南盟 - 35 美元 非南盟 - 75 美元 电子签证类别将额外收取 18.50 美元服务费。如果从任何斯里兰卡机场过境，则可豁免电子签证（2 天过境期）。",
+    "country_en": "Sri Lanka",
+    "iso3": "LKA"
+  },
+  {
+    "country": "新加坡",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "持有中国护照以外旅行证件的，须提前办理签证或免签过境。",
+    "country_en": "Singapore",
+    "iso3": "SGP"
+  },
+  {
+    "country": "新西兰",
+    "type": "常规签",
+    "rawRequirement": "Online Visa required",
+    "stay": "",
+    "note": "可以使用 eGate 进入。澳大利亚永久居民签证或居民返回签证的持有者可在抵达时获得新西兰居民签证，允许无限期居留（根据跨塔斯曼旅行安排），但须满足品格要求并在出发前获得电子旅行授权。持有 NZaTA 往返澳大利亚且在机场停留时间不超过 24 小时的乘客无需过境签证。签发的签证有效期最长为5年。从2025年11月3日至2026年11月2日，持有有效澳大利亚旅游、工作、学生或家庭签证从澳大利亚出发的中国游客将可以凭NZeTA前往新西兰旅行最多3个月。持有 NZaTA 的旅客在机场停留时间不超过 24 小时无需过境签证。",
+    "country_en": "New Zealand",
+    "iso3": "NZL"
+  },
+  {
+    "country": "日本",
+    "type": "电子签",
+    "rawRequirement": "eVisa (conditional)",
+    "stay": "",
+    "note": "在成田机场或羽田机场过境的乘客可以申请海岸通行证，以便在没有签证的情况下进入日本不超过 72 小时，具体取决于移民当局的酌情权和某些条件。乘坐经批准的游轮的乘客如果停留时间不超过 15 天，则不需要签证。如果居住在巴西、柬埔寨、加拿大、沙特阿拉伯、新加坡、南非、中国台湾、阿拉伯联合酋长国、英国、美国，则可以使用电子签证。这是单次入境签证，停留期限为90天。如果居住在蒙古，则可以使用电子签证。这是单次入境签证，停留期限为90天。自2023年12月15日起，电子签证必须通过日本海外机构认可的旅行社申请。电子签证也适用于居住在中国大陆（香港和澳门除外）的中国护照持有者，为单次入境签证，停留期限为30天。自 2023 年 6 月 19 日起，电子签证申请必须通过日本海外机构认可的旅行社进行。电子签证将在旅行社准备好通过 JAPAN e-Visa 申请时签发。对于居住在其他地区的中国公民，需要申请签证。所有地区均可获得多次入境小插曲式签证，有效期为 3 年或 5 年。",
+    "country_en": "Japan",
+    "iso3": "JPN"
+  },
+  {
+    "country": "智利",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "国家签证可以用加拿大或美国签发的签证（自抵达之日起有效期至少为 6 个月）或 PR 卡（绿卡）代替。",
+    "country_en": "Chile",
+    "iso3": "CHL"
+  },
+  {
+    "country": "柬埔寨",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "30天",
+    "note": "有效期为 30 天的签证可在抵达时或在线获取。柬埔寨决定对中国公民试行免签，允许2026年6月15日至10月15日期间停留14天。",
+    "country_en": "Cambodia",
+    "iso3": "KHM"
+  },
+  {
+    "country": "格林纳达",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Grenada",
+    "iso3": "GRD"
+  },
+  {
+    "country": "格鲁吉亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "持有欧盟/欧洲自由贸易联盟/海湾合作委员会国家、欧盟国家海外领土（安圭拉、蒙特塞拉特、皮特凯恩、圣赫勒拿、阿森松岛和特里斯坦达库尼亚群岛除外）、澳大利亚、加拿大、以色列、日本、新西兰、韩国、英国或美国的有效签证或居留许可 - 180 天内最多可免签停留 90 天。否则，将适用默认的 30 天期限。",
+    "country_en": "Georgia",
+    "iso3": "GEO"
+  },
+  {
+    "country": "梵蒂冈城",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Holy See (Vatican City State)",
+    "iso3": "VAT"
+  },
+  {
+    "country": "比利时",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Belgium",
+    "iso3": "BEL"
+  },
+  {
+    "country": "毛里塔尼亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "可在努瓦克肖特-乌姆图恩西国际机场购买。持有因公护照的人不需要签证。",
+    "country_en": "Mauritania",
+    "iso3": "MRT"
+  },
+  {
+    "country": "毛里求斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Mauritius",
+    "iso3": "MUS"
+  },
+  {
+    "country": "汤加",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Tonga",
+    "iso3": "TON"
+  },
+  {
+    "country": "沙特阿拉伯",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "90天",
+    "note": "",
+    "country_en": "Saudi Arabia",
+    "iso3": "SAU"
+  },
+  {
+    "country": "法国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "France",
+    "iso3": "FRA"
+  },
+  {
+    "country": "波兰",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Poland",
+    "iso3": "POL"
+  },
+  {
+    "country": "波斯尼亚和黑塞哥维那",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "任意 180 天内的 90 天。",
+    "country_en": "Bosnia and Herzegovina",
+    "iso3": "BIH"
+  },
+  {
+    "country": "泰国",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "60天",
+    "note": "停留期限每次为60天，任意180天内不得超过90天。在泰国期间可以延长 60 天的签证。",
+    "country_en": "Thailand",
+    "iso3": "THA"
+  },
+  {
+    "country": "津巴布韦",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "1个月",
+    "note": "还有资格获得允许进入赞比亚的通用签证。",
+    "country_en": "Zimbabwe",
+    "iso3": "ZWE"
+  },
+  {
+    "country": "洪都拉斯",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "国家签证可以用加拿大、美国或申根区成员国签发的有效签证或英国、日本、新加坡、澳大利亚和新西兰的居留许可代替。",
+    "country_en": "Honduras",
+    "iso3": "HND"
+  },
+  {
+    "country": "海地",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "3个月",
+    "note": "所有非海地护照持有者均须在抵达时支付 10 美元的旅游费。",
+    "country_en": "Haiti",
+    "iso3": "HTI"
+  },
+  {
+    "country": "澳大利亚",
+    "type": "常规签",
+    "rawRequirement": "Online Visa required",
+    "stay": "",
+    "note": "可以在线申请（在线访客 e600 签证和在线 e400 工作签证）。中国公民签证有效期为1年、3年、5年或10年，由于中国大陆未设立签证申请中心，在中国大陆以外的签证申请中心额外登记个人信息需申请10年签证。中国生物识别护照持有者在抵达澳大利亚时使用自动护照检查 SmartGate。",
+    "country_en": "Australia",
+    "iso3": "AUS"
+  },
+  {
+    "country": "爱尔兰",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "2021 年 10 月之前，国家签证可以替换为有效的 C 签证或由英国签发的 BIVS 背书的签证。仅当共同旅行区的第一入境点位于英国时才允许入境。",
+    "country_en": "Ireland",
+    "iso3": "IRL"
+  },
+  {
+    "country": "爱沙尼亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Estonia",
+    "iso3": "EST"
+  },
+  {
+    "country": "牙买加",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Jamaica",
+    "iso3": "JAM"
+  },
+  {
+    "country": "特立尼达和多巴哥",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Trinidad and Tobago",
+    "iso3": "TTO"
+  },
+  {
+    "country": "玻利维亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "游客必须填写在线申请表，但仍需要前往大使馆才能获得贴纸签证。持有因公护照的人不需要签证。",
+    "country_en": "Bolivia, Plurinational State of",
+    "iso3": "BOL"
+  },
+  {
+    "country": "瑙鲁",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "90天",
+    "note": "据Timatic称，中国公民可获得有效期最长为90天的落地签证。持有因公护照的人不需要签证。",
+    "country_en": "Nauru",
+    "iso3": "NRU"
+  },
+  {
+    "country": "瑞典",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Sweden",
+    "iso3": "SWE"
+  },
+  {
+    "country": "瑞士",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Switzerland",
+    "iso3": "CHE"
+  },
+  {
+    "country": "瓦努阿图",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Vanuatu",
+    "iso3": "VUT"
+  },
+  {
+    "country": "白俄罗斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "30 天免签证，任何 1 个日历年内最多可停留 90 天。持有因公护照的人在最长 30 天的时间内不需要签证。",
+    "country_en": "Belarus",
+    "iso3": "BLR"
+  },
+  {
+    "country": "科威特",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "科威特政府仅向持有普通护照、持有有效英国、美国或申根签证的中国公民或拥有海湾合作委员会国家居留权的中国公民颁发旅行签证。",
+    "country_en": "Kuwait",
+    "iso3": "KWT"
+  },
+  {
+    "country": "科摩罗",
+    "type": "落地签",
+    "rawRequirement": "Visa on arrival",
+    "stay": "45天",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Comoros",
+    "iso3": "COM"
+  },
+  {
+    "country": "科特迪瓦",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "3个月",
+    "note": "电子签证持有者必须通过布埃特港机场抵达 持有公共事务护照不需要签证。",
+    "country_en": "Côte d'Ivoire",
+    "iso3": "CIV"
+  },
+  {
+    "country": "秘鲁",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有有效美国、加拿大、澳大利亚、申根区或英国签证或永久居民许可证的中国公民可以出于旅游或商务目的免签证停留长达 180 天。签证自抵达之日起有效期必须至少为 6 个月。",
+    "country_en": "Peru",
+    "iso3": "PER"
+  },
+  {
+    "country": "突尼斯",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "仅供旅游目的。入境时需提供付费酒店预订单（Bon-Voucher）以及与在突尼斯停留时间相匹配的往返机票。",
+    "country_en": "Tunisia",
+    "iso3": "TUN"
+  },
+  {
+    "country": "立陶宛",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Lithuania",
+    "iso3": "LTU"
+  },
+  {
+    "country": "索马里",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Somalia",
+    "iso3": "SOM"
+  },
+  {
+    "country": "约旦",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "",
+    "note": "抵达后即可获取签证，费用总计 40 约旦第纳尔，可在大多数国际入境口岸和陆地边境口岸办理。 （侯赛因国王/艾伦比桥除外）",
+    "country_en": "Jordan",
+    "iso3": "JOR"
+  },
+  {
+    "country": "纳米比亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "3个月",
+    "note": "纳米比亚当局提议免除中国公民的签证要求。",
+    "country_en": "Namibia",
+    "iso3": "NAM"
+  },
+  {
+    "country": "缅甸",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "28天",
+    "note": "缅甸政府的签证政策不适用于中央政府未实际控制的民兵控制地区。电子签证持有者必须通过仰光、内比都或曼德勒机场或通过泰国（大其力、妙瓦底和高当）或印度（Rih Khaw Dar 和 Tamu）的陆地边境口岸抵达。电子签证可用于旅游（允许停留 28 天）或商务（允许停留 70 天）目的。 2026 年 8 月 29 日之前，可在仰光、内比都或曼德勒机场签发落地签证，有效期为 30 天。边境省份的居民可以申请出入境通行证，该通行证与边境自动化控制系统配合使用，以加快过境速度。",
+    "country_en": "Myanmar",
+    "iso3": "MMR"
+  },
+  {
+    "country": "罗马尼亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Romania",
+    "iso3": "ROU"
+  },
+  {
+    "country": "美国",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "获得签证的中国公民通常会获得“120 个月多次入境 B1/B2 组合签证”。但此类B1/B2签证仅限中共党员及其配偶和21岁以下子女“一个月单次入境”。 10 年多次入境 B 签证持有者必须每两年通过电子签证更新系统 (EVUS) 提供更新。北马里亚纳群岛不需要签证。",
+    "country_en": "United States",
+    "iso3": "USA"
+  },
+  {
+    "country": "老挝",
+    "type": "落地签",
+    "rawRequirement": "eVisa / Visa on arrival",
+    "stay": "30天",
+    "note": "7月1日至12月31日，由旅行社陪同的5人团队游客可通过在老挝注册的旅行社安排行程并提前申请免签，免签入境老挝15天。 33 个过境点中有 18 个仅对普通签证持有者开放。电子签证可用于通过琅勃拉邦、巴色和万象国际机场、3 座泰老友谊大桥、磨丁（公路和铁路）和万象（Khamsavath 火车站）进入老挝。琅勃拉邦、巴色和万象国际机场、4 座泰老友谊大桥和 7 个边境口岸可办理落地签证。持有因公护照的人不需要签证。",
+    "country_en": "Lao People's Democratic Republic",
+    "iso3": "LAO"
+  },
+  {
+    "country": "肯尼亚",
+    "type": "常规签",
+    "rawRequirement": "Electronic Travel Authorisation",
+    "stay": "90天",
+    "note": "申请最多可以在旅行前 90 天提交，并且必须至少提前 3 天提交。 eTA 费用为 32.50 美元。需要提供游客计划入住的酒店的预订证明（如果与朋友一起入住，也可以提供邀请函）。如果来自黄热病流行国家，则需要提供黄热病疫苗接种证明。",
+    "country_en": "Kenya",
+    "iso3": "KEN"
+  },
+  {
+    "country": "芬兰",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Finland",
+    "iso3": "FIN"
+  },
+  {
+    "country": "苏丹",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Sudan",
+    "iso3": "SDN"
+  },
+  {
+    "country": "苏里南",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "客人必须在抵达前在线支付 50 美元或 50 欧元的入场费。还提供多次入境电子签证。",
+    "country_en": "Suriname",
+    "iso3": "SUR"
+  },
+  {
+    "country": "英国和皇家属地",
+    "type": "常规签",
+    "rawRequirement": "Visa required[6]",
+    "stay": "",
+    "note": "如果持有 BIVS 认可的有效爱尔兰签证，则无需签证。仅当共同旅行区的第一入境点位于爱尔兰时才允许入境。[155]签证的有效期为 2,5 或 10 年，用于度假和商务目的。如果持有有效的美国、加拿大、澳大利亚（需要实体贴纸签证）、新西兰、爱尔兰（仅限生物识别签证）和申根（仅限 D 签证或居留许可）签证或永久居留许可，则不需要过境签证。如果不在空侧，则需要直接或通过合理航线从这些国家和地区出发或飞往这些国家和地区。",
+    "country_en": "United Kingdom",
+    "iso3": "GBR"
+  },
+  {
+    "country": "荷兰",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Netherlands",
+    "iso3": "NLD"
+  },
+  {
+    "country": "莫桑比克",
+    "type": "电子签",
+    "rawRequirement": "Electronic Travel Authorization",
+    "stay": "30天",
+    "note": "游客必须在出行前至少 48 小时在电子签证平台上登记预计到达时间，并支付 650 赞比亚先令的手续费。可以再延长 30 天。",
+    "country_en": "Mozambique",
+    "iso3": "MOZ"
+  },
+  {
+    "country": "莱索托",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Lesotho",
+    "iso3": "LSO"
+  },
+  {
+    "country": "菲律宾",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "14天",
+    "note": "发给中国公民的电子签证仅适用于单次入境。有效电子签证的持有者必须通过尼诺·阿基诺国际机场（马尼拉）或麦克坦-宿务国际机场（宿务）抵达。持有澳大利亚、日本、加拿大、美国或申根区签证的人无需签证即可出于旅游目的停留最多 7 天。从2026年1月16日至2027年1月15日，试行最长14天的免签政策。",
+    "country_en": "Philippines",
+    "iso3": "PHL"
+  },
+  {
+    "country": "萨尔瓦多",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "El Salvador",
+    "iso3": "SLV"
+  },
+  {
+    "country": "萨摩亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "任意 180 天内的 90 天。",
+    "country_en": "Samoa",
+    "iso3": "WSM"
+  },
+  {
+    "country": "葡萄牙",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Portugal",
+    "iso3": "PRT"
+  },
+  {
+    "country": "蒙古",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Mongolia",
+    "iso3": "MNG"
+  },
+  {
+    "country": "西班牙",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Spain",
+    "iso3": "ESP"
+  },
+  {
+    "country": "贝宁",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Benin",
+    "iso3": "BEN"
+  },
+  {
+    "country": "赞比亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "还有资格获得允许进入津巴布韦的通用签证。",
+    "country_en": "Zambia",
+    "iso3": "ZMB"
+  },
+  {
+    "country": "赤道几内亚",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "",
+    "country_en": "Equatorial Guinea",
+    "iso3": "GNQ"
+  },
+  {
+    "country": "越南",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "",
+    "note": "电子签证的有效期为 90 天，可多次入境。持有因公护照的人不需要签证。富国岛 30 天不需要签证，包括在内排国际机场或新山一国际机场过境。落地签证领取可以通过旅行社在线安排，并可在胡志明市、河内、岘港、芽庄和富国岛机场办理。带有“公务”字样的普通护照可以免签证进入越南。",
+    "country_en": "Viet Nam",
+    "iso3": "VNM"
+  },
+  {
+    "country": "阿塞拜疆",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "停留期限每次为30天，任意180天内不得超过90天。",
+    "country_en": "Azerbaijan",
+    "iso3": "AZE"
+  },
+  {
+    "country": "阿富汗",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "电子签证的单次入境有效期最长为 30 天，并且只能在抵达喀布尔机场时使用。需要一封介绍信（来自雇主/组织/大学/等）。",
+    "country_en": "Afghanistan",
+    "iso3": "AFG"
+  },
+  {
+    "country": "阿尔及利亚",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Algeria",
+    "iso3": "DZA"
+  },
+  {
+    "country": "阿尔巴尼亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "任意 180 天内的 90 天。",
+    "country_en": "Albania",
+    "iso3": "ALB"
+  },
+  {
+    "country": "阿拉伯联合酋长国",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "90天",
+    "note": "任意 180 天内的 90 天。",
+    "country_en": "United Arab Emirates",
+    "iso3": "ARE"
+  },
+  {
+    "country": "阿曼",
+    "type": "免签",
+    "rawRequirement": "Visa not required / eVisa",
+    "stay": "14天/30天",
+    "note": "中国公民也有资格获得有效期为 30 天的单次/多次入境电子签证。",
+    "country_en": "Oman",
+    "iso3": "OMN"
+  },
+  {
+    "country": "阿根廷",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "电子旅行授权 (AVE) 仅颁发给已持有美国或申根签证的人士。它必须在旅行前获得批准，并且对于旅游目的有效。自2017年10月1日起，签证有效期为10年。自 2025 年 7 月 22 日起，持有有效美国签证的人士无需签证即可停留最多 30 天，并可再延长一次 30 天。阿根廷外交部网站称，中国公民前往阿根廷需签证。",
+    "country_en": "Argentina",
+    "iso3": "ARG"
+  },
+  {
+    "country": "韩国",
+    "type": "常规签",
+    "rawRequirement": "Online Visa required",
+    "stay": "",
+    "note": "在下列情况下，中国公民可以免签证进入韩国。直接或过境游客前往济州岛停留 30 天以内无需签证。往返美国、加拿大和新西兰等第三国的过境。中国团体游客从中国（含香港、澳门）出发前往韩国仁川、金浦、金海、清州、务安、大邱、襄阳国际机场，行程5天内（襄阳机场10天）后转乘韩国国内航班飞往济州岛。持有日本团体旅游签证从中国出发经韩国前往日本的中国团体游客，以及从日本出发经韩国前往中国或第三国的中国团体游客。自2025年9月29日至2026年6月30日，在指定旅行社注册的3人以上团队旅游的中国游客，可免办签证赴韩国停留最长15天。",
+    "country_en": "Korea, Republic of",
+    "iso3": "KOR"
+  },
+  {
+    "country": "马尔代夫",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Maldives",
+    "iso3": "MDV"
+  },
+  {
+    "country": "马拉维",
+    "type": "电子签",
+    "rawRequirement": "eVisa",
+    "stay": "30天",
+    "note": "",
+    "country_en": "Malawi",
+    "iso3": "MWI"
+  },
+  {
+    "country": "马来西亚",
+    "type": "免签",
+    "rawRequirement": "Visa not required",
+    "stay": "30天",
+    "note": "任何 180 天内的 90 天。",
+    "country_en": "Malaysia",
+    "iso3": "MYS"
+  },
+  {
+    "country": "马绍尔群岛",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "",
+    "country_en": "Marshall Islands",
+    "iso3": "MHL"
+  },
+  {
+    "country": "马耳他",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "通常需申根短期签证（C类），请按入境国使领馆最新要求申请。",
+    "country_en": "Malta",
+    "iso3": "MLT"
+  },
+  {
+    "country": "马达加斯加",
+    "type": "落地签",
+    "rawRequirement": "Online Visa / Visa on arrival",
+    "stay": "60天",
+    "note": "",
+    "country_en": "Madagascar",
+    "iso3": "MDG"
+  },
+  {
+    "country": "马里",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "持有因公护照的人不需要签证。",
+    "country_en": "Mali",
+    "iso3": "MLI"
+  },
+  {
+    "country": "黎巴嫩",
+    "type": "落地签",
+    "rawRequirement": "Free visa on arrival",
+    "stay": "1个月",
+    "note": "可再延长 2 个月。",
+    "country_en": "Lebanon",
+    "iso3": "LBN"
+  },
+  {
+    "country": "黑山",
+    "type": "常规签",
+    "rawRequirement": "Visa required",
+    "stay": "",
+    "note": "国家签证可以用有效的申根签证、澳大利亚、塞浦路斯、日本、加拿大、新西兰、爱尔兰、美利坚合众国和英国的有效签证代替。还有申根区国家、澳大利亚、塞浦路斯、日本、加拿大、新西兰、爱尔兰、美利坚合众国和英国的居留许可，每次停留最多 30 天。",
+    "country_en": "Montenegro",
+    "iso3": "MNE"
+  }
+]
